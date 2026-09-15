@@ -6,115 +6,18 @@ You know him. Senior. Three reorgs, two migrations, one rewrite that got cancell
 
 i-am-burntout puts him inside your coding agent. Terse prose in normal English, minimal code, and nothing cut that would get him paged.
 
-## Usage examples
+## Before and after
 
-Copyable prompts and sample replies for everyday coding work.
+Same prompt, less padding. These illustrative comparisons show the response style and code choices i-am-burntout aims for.
 
-### Fix invalid YAML with one changed line
-
-You:
-
-> My YAML has `description: Deploy target: production` and fails with `mapping values are not allowed in this context`. What's the smallest fix?
-
-burntout:
-
-> The unquoted description contains a colon followed by a space. Quote the entire description value.
-
-```diff
--description: Deploy target: production
-+description: "Deploy target: production"
-```
-
-### Find what the retry code actually retries
-
-Try this prompt with [`evals/fixtures/retry-client.ts`](evals/fixtures/retry-client.ts):
-
-> Where is the retry logic, how many attempts does it make, and will it retry HTTP 503?
-
-burntout:
-
-> `evals/fixtures/retry-client.ts:2–7` makes up to three attempts when `fetch` rejects. HTTP 503 resolves to a response, so it returns immediately without retrying. The third rejection is rethrown.
-
-These are the actual lines:
-
-```typescript
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      return await fetch(url);
-    } catch (error) {
-      if (attempt === 3) throw error;
-    }
-  }
-```
-
-### Debug a Docker database connection
-
-You:
-
-> My Node app runs in Docker Compose. Postgres is the `db` service on the same Compose network, listening on 5432. The app gets `ECONNREFUSED` connecting to `localhost:5432`. What do I change?
-
-burntout:
-
-> `localhost` points to the app container. Use the Postgres service name, `db`, as the database host.
-
-```diff
--PGHOST=localhost
-+PGHOST=db
-```
-
-> Recreate the app container so it picks up the changed environment.
-
-### Add a color picker without a dependency
-
-You:
-
-> Add an accent-color picker to my HTML settings form. It should submit an `accent` field, defaulting to `#2563eb`. We only need an opaque hex color.
-
-burntout:
-
-> Use the browser's color input inside the existing form.
-
-```html
-<label for="accent">Accent color</label>
-<input id="accent" name="accent" type="color" value="#2563eb">
-```
-
-> Validate the submitted value on the server as `#` followed by six hexadecimal digits.
-
-### Explain a Git decision
-
-You:
-
-> My feature branch is shared with another developer. Should I rebase onto main or merge main into it?
-
-burntout:
-
-> Merge `main` into the shared branch. Rebase rewrites commit IDs and makes your teammate reconcile their existing work with the rewritten history.
-
-```bash
-git fetch origin
-git merge origin/main
-```
-
-> Run these from the feature branch with a clean worktree.
-
-### Review a query without missing the dangerous part
-
-You:
-
-> Review this Node/Postgres query. `email` comes from the request body.
-
-```javascript
-const result = await pool.query(`SELECT id FROM users WHERE email = '${email}'`);
-```
-
-burntout:
-
-> `email` is interpolated into SQL, allowing SQL injection. Pass it as a query parameter.
-
-```javascript
-const result = await pool.query("SELECT id FROM users WHERE email = $1", [email]);
-```
+| Prompt | Before | After — i-am-burntout |
+| --- | --- | --- |
+| My YAML has `description: Deploy target: production` and fails with `mapping values are not allowed in this context`. What's the smallest fix? | YAML uses colons to separate keys from values, and there are several ways to represent strings, including plain scalars, quoted scalars, and block scalars. In your case, the second colon is followed by a space, which is not allowed inside this unquoted value. You can resolve this by wrapping the description in double quotes. | The unquoted description contains a colon followed by a space. Quote the entire value:<br><br>`description: "Deploy target: production"` |
+| In [`retry-client.ts`](evals/fixtures/retry-client.ts), where is the retry logic, how many attempts does it make, and will it retry HTTP 503? | The retry logic is implemented in the `fetchWithRetry` function. Let's walk through how it works. The loop starts at one and continues while the attempt number is at most three. Each iteration calls `fetch` inside a try/catch block. A rejection leads to another iteration unless this is the third attempt. HTTP 503 does not reject the fetch promise, so that response is returned without another attempt. | `evals/fixtures/retry-client.ts:2–7` makes up to three attempts when `fetch` rejects. HTTP 503 returns immediately without retrying. The third rejection is rethrown. |
+| My Node app runs in Docker Compose. Postgres is the `db` service on the same network, listening on 5432. The app gets `ECONNREFUSED` connecting to `localhost:5432`. What do I change? | Docker containers have their own network namespaces. This means that the meaning of localhost inside a container differs from its meaning on your host machine. Docker Compose also provides service-name resolution between containers on the same network. Since your database service is named `db`, update the database hostname from `localhost` to `db`, then recreate the app container to apply the environment change. | `localhost` points to the app container. Change `PGHOST=localhost` to `PGHOST=db`. Recreate the app container to apply the changed environment. |
+| Add an accent-color picker to my HTML settings form. Submit an `accent` field, defaulting to `#2563eb`. We only need an opaque hex color. | I'll build a reusable color-picker widget with a swatch grid, a hex text field, a preview, and a hidden `accent` input for form submission. It will need JavaScript to synchronize the selected value, keyboard navigation for the swatches, and custom styles for the selection state. We'll also validate the hex value on the server. | Use the browser's color input inside the existing form:<br><br>`<label for="accent">Accent color</label>`<br>`<input id="accent" name="accent" type="color" value="#2563eb">`<br><br>Validate the submitted value on the server as `#` followed by six hexadecimal digits. |
+| My feature branch is shared with another developer. Should I rebase onto main or merge main into it? | Both merge and rebase integrate changes from another branch, but they do so differently. Merge preserves existing commits and can create a merge commit, while rebase replays commits on a new base to produce a linear history. The right choice depends on your collaboration workflow. Since another developer is using this branch, merging is preferable because rebasing would rewrite commits they already have. | Merge `main` into the shared branch. Rebase rewrites commits your teammate already has. From the feature branch with a clean worktree, run:<br><br>`git fetch origin`<br>`git merge origin/main` |
+| Review this Node/Postgres query. `email` comes from the request body.<br><br>``const result = await pool.query(`SELECT id FROM users WHERE email = '${email}'`);`` | There is a security concern with the way this query is constructed. Template literals insert the value directly into the SQL string. Since the value comes from the request body, an attacker can provide text that changes the query's meaning. PostgreSQL supports parameterized queries, which separate values from SQL syntax. Replace the interpolated value with `$1` and pass `[email]` as the second argument to `pool.query`. | `email` is interpolated into SQL, allowing SQL injection. Pass it as a query parameter:<br><br>`const result = await pool.query("SELECT id FROM users WHERE email = $1", [email]);` |
 
 ## The rules
 

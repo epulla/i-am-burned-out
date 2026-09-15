@@ -1,12 +1,13 @@
 {
   "name": "i-am-burntout",
   "owner": { "name": "Erick" },
+  "description": "A burnt-out senior dev inside your coding agent. Energy for the answer, none for the intro, none for your abstraction layer.",
   "plugins": [
     {
       "name": "i-am-burntout",
       "source": "./",
       "description": "A burnt-out senior dev inside your coding agent. Energy for the answer, none for the intro, none for your abstraction layer.",
-      "version": "0.1.0"
+      "version": "0.2.0"
     }
   ]
 }

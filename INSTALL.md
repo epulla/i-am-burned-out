@@ -35,7 +35,7 @@ agy plugin uninstall i-am-burntout
 <details>
 <summary><strong>AstronClaw (custom skill)</strong></summary>
 
-This untested route follows [AstronClaw's custom-skills documentation](https://github.com/iflytek/astronclaw-tutorial/blob/main/docs/guide/astronclaw/skills.md).
+This route follows [AstronClaw's custom-skills documentation](https://github.com/iflytek/astronclaw-tutorial/blob/main/docs/guide/astronclaw/skills.md).
 
 ### Install
 
@@ -67,7 +67,7 @@ claude plugin marketplace add epulla/i-am-burntout
 claude plugin install i-am-burntout@i-am-burntout
 ```
 
-Inside Claude Code, run `/i-am-burntout:i-am-burntout full`. Use `/i-am-burntout:i-am-burntout` with no argument to report the current level; `/i-am-burntout:burntout-review` reviews the current diff without changing it.
+Inside Claude Code, run `/i-am-burntout:level full`. Use `/i-am-burntout:level` with no argument to report the current level; `/i-am-burntout:burntout-review` reviews the current diff without changing it.
 
 ### Verify
 
@@ -101,7 +101,7 @@ codex plugin marketplace add epulla/i-am-burntout --ref main
 codex plugin add i-am-burntout@i-am-burntout
 ```
 
-Inside Codex, invoke `$i-am-burntout`. Add `at lite`, `at full`, or `at ultra` to select a level.
+Inside Codex, invoke `$i-am-burntout`. Add `at full`, `at ultra`, or `at off` to select a level. Other levels are rejected without changing the current level.
 
 ### Verify
 
@@ -514,7 +514,7 @@ Run the command matching the scope you installed.
 
 ## Activation
 
-The shipped skill allows automatic invocation. For deterministic activation, use the host syntax above and request `lite`, `full`, or `ultra`. Use `off`, `stop burntout mode`, or `normal mode` to stop it for the current conversation. Invoke it again if context compaction drops the active instructions.
+The shipped skill allows automatic invocation. For deterministic activation, use the host syntax above and request `full`, `ultra`, or `off`. Other levels are rejected without changing the current level. Use `off`, `stop burntout mode`, or `normal mode` to stop it for the current conversation. Invoke it again if context compaction drops the active instructions.
 
 ## Troubleshooting
 

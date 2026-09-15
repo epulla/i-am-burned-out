@@ -1,0 +1,10 @@
+{
+  "name": "i-am-burntout",
+  "description": "A burnt-out senior dev inside your coding agent. Energy for the answer, none for the intro, none for your abstraction layer.",
+  "version": "0.1.0",
+  "author": { "name": "Erick" },
+  "homepage": "https://github.com/epulla/i-am-burntout",
+  "repository": "https://github.com/epulla/i-am-burntout",
+  "license": "MIT",
+  "keywords": ["skill", "yagni", "concise", "terse", "prompt-engineering", "claude-code", "codex", "cursor"]
+}

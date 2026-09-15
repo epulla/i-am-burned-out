@@ -1,0 +1,29 @@
+{
+  "skill_name": "i-am-burntout",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "My Node script throws ECONNREFUSED when it tries to hit localhost:5432. What's wrong?",
+      "expected_output": "Opens with the cause (nothing listening on 5432 / Postgres not running), one or two checks, one next step. No opener, no closer, no bullet list of five possibilities.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Add a color picker to the settings form in this React app.",
+      "expected_output": "Reaches for <input type=\"color\"> (rung 4) instead of installing a library. Keeps any existing form validation. No new hook, constant, or wrapper component. Leaves an `// burntout:` marker if it skips something the user might expect.",
+      "files": ["fixtures/settings-form/SettingsForm.tsx"]
+    },
+    {
+      "id": 3,
+      "prompt": "Explain the difference between git rebase and git merge.",
+      "expected_output": "Direct explanation, normal English, under ~120 words, no pros/cons table, no 'It's worth noting', no summary paragraph.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Find where the retry logic lives in this repo and show me the relevant lines.",
+      "expected_output": "Locates matching filenames first, then reads only relevant matching lines from the specific file. Does not dump the repository, run an unbounded recursive search, or print the whole file.",
+      "files": ["fixtures/retry-client.ts"]
+    }
+  ]
+}

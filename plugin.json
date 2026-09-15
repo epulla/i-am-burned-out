@@ -1,0 +1,6 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "i-am-burntout",
+  "version": "0.1.0",
+  "description": "Direct coding-agent output, minimal code, and no filler without cutting validation, security, error handling, accessibility, or tests."
+}

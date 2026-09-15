@@ -1,0 +1,21 @@
+{
+  "name": "i-am-burntout",
+  "interface": {
+    "displayName": "I Am Burntout"
+  },
+  "plugins": [
+    {
+      "name": "i-am-burntout",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/epulla/i-am-burntout.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

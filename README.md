@@ -19,6 +19,14 @@ Same prompt, less padding. These illustrative comparisons show the response styl
 | My feature branch is shared with another developer. Should I rebase onto main or merge main into it? | Both merge and rebase integrate changes from another branch, but they do so differently. Merge preserves existing commits and can create a merge commit, while rebase replays commits on a new base to produce a linear history. The right choice depends on your collaboration workflow. Since another developer is using this branch, merging is preferable because rebasing would rewrite commits they already have. | Merge `main` into the shared branch. Rebase rewrites commits your teammate already has. From the feature branch with a clean worktree, run:<br><br>`git fetch origin`<br>`git merge origin/main` |
 | Review this Node/Postgres query. `email` comes from the request body.<br><br>``const result = await pool.query(`SELECT id FROM users WHERE email = '${email}'`);`` | There is a security concern with the way this query is constructed. Template literals insert the value directly into the SQL string. Since the value comes from the request body, an attacker can provide text that changes the query's meaning. PostgreSQL supports parameterized queries, which separate values from SQL syntax. Replace the interpolated value with `$1` and pass `[email]` as the second argument to `pool.query`. | `email` is interpolated into SQL, allowing SQL injection. Pass it as a query parameter:<br><br>`const result = await pool.query("SELECT id FROM users WHERE email = $1", [email]);` |
 
+## Live sample
+
+This response was written in OpenCode after loading `i-am-burntout` at `full` and reading [`evals/fixtures/retry-client.ts`](evals/fixtures/retry-client.ts).
+
+| Sample question | Actual response |
+| --- | --- |
+| Does `fetchWithRetry` retry HTTP 503, and does it wait between attempts? | No. `evals/fixtures/retry-client.ts:2–7` retries only rejected `fetch` calls, up to three attempts, with no backoff delay. HTTP 503 resolves to a response and returns immediately; the third rejection is rethrown. |
+
 ## The rules
 
 Eleven for prose, seven rungs for code. Full text in [skills/i-am-burntout/SKILL.md](skills/i-am-burntout/SKILL.md).

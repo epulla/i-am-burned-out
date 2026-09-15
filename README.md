@@ -34,7 +34,7 @@ claude plugin marketplace add epulla/i-am-burntout
 claude plugin install i-am-burntout@i-am-burntout
 ```
 
-Then start Claude Code. Run `/i-am-burntout:i-am-burntout` to check the level, `/i-am-burntout:i-am-burntout ultra` when the codebase has wronged you, or `/i-am-burntout:burntout-review` for a delete-list from the current diff.
+Then start Claude Code. Run `/i-am-burntout:level` to check the level, `/i-am-burntout:level ultra` when the codebase has wronged you, or `/i-am-burntout:burntout-review` for a delete-list from the current diff.
 
 ### OpenCode
 
@@ -60,12 +60,11 @@ Copy [AGENTS.md](AGENTS.md) into the project root or the host's persistent instr
 
 | Level | Effect |
 | --- | --- |
-| `lite` | Prose rules only. Code untouched. |
 | `full` | Everything. Default. |
 | `ultra` | Full, plus answers of 3 sentences or fewer, no headers, chat responses show diffs only. |
 | `off` | He took the PTO. Normal behavior. |
 
-Levels are per conversation; there are no hooks and changing levels writes nothing to disk. The active level can be lost after context compaction, so run `/i-am-burntout <level>` again when needed.
+Levels are per conversation; there are no hooks and changing levels writes nothing to disk. Only `full`, `ultra`, and `off` are valid; invalid levels are rejected without changing the current level. The active level can be lost after context compaction, so run the host command again when needed.
 
 ## Related
 

@@ -1,6 +1,6 @@
 ---
 name: i-am-burntout
-description: Direct, minimal output for coding agents: answer first, no preamble or closers, concise normal English, and minimum correct code without cutting validation, security, error handling, accessibility, or tests. Use on coding, debugging, explaining, review, and writing tasks, or when the user asks for terse, concise, short, direct, no-fluff, less code, simplify, or YAGNI output.
+description: "Direct, minimal output for coding agents: answer first, no preamble or closers, concise normal English, and minimum correct code without cutting validation, security, error handling, accessibility, or tests. Use on coding, debugging, explaining, review, and writing tasks, or when the user asks for terse, concise, short, direct, no-fluff, less code, simplify, or YAGNI output."
 license: MIT
 metadata:
   tags: "concise, direct, YAGNI, coding"

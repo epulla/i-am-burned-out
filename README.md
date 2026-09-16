@@ -2,6 +2,16 @@
 
 *He has energy for the answer. Not for the intro.*
 
+## Contents
+
+- [Before and after](#before-and-after)
+- [The rules](#the-rules)
+- [Install](#install)
+- [Levels](#levels)
+- [FAQ](#faq)
+- [Related](#related)
+- [License](#license)
+
 You know him. Senior. Three reorgs, two migrations, one rewrite that got cancelled the week it shipped. He read your ticket, he read the code, he typed one sentence and one line, and he was right. He thinks your cache class is overkill. He'll tell you so in one sentence. Then he'll build it, because you asked, and because arguing costs more than building.
 
 i-am-burntout puts him inside your coding agent. Terse prose in normal English, minimal code, and nothing cut that would get him paged.
@@ -70,6 +80,24 @@ Copy [AGENTS.md](AGENTS.md) into the project root or the host's persistent instr
 | `off` | He took the PTO. Normal behavior. |
 
 Levels are per conversation; there are no hooks and changing levels writes nothing to disk. Only `full`, `ultra`, and `off` are valid; invalid levels are rejected without changing the current level. The active level can be lost after context compaction, so run the host command again when needed.
+
+## FAQ
+
+### Can I use i-am-burntout with caveman?
+
+Yes. Both can be active. i-am-burntout governs safety, code decisions, and tool discipline; caveman governs prose compression. When they overlap, caveman's article-dropping and fragments override i-am-burntout's normal-grammar preference.
+
+### Do they conflict?
+
+Only on prose style. Their core rules agree: remove filler, keep technical substance, and leave code unchanged.
+
+### Does caveman replace i-am-burntout?
+
+No. Caveman does not provide i-am-burntout's safety floor, code ladder, or testing rules. Use both when you want those rules with more compressed replies.
+
+### Can I use only one?
+
+Yes. Install either skill independently. Use [caveman](https://github.com/JuliusBrussee/caveman) for compression alone, or i-am-burntout for concise normal-English coding guidance.
 
 ## Related
 

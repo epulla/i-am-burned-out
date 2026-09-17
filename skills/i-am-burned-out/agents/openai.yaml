@@ -1,0 +1,7 @@
+interface:
+  display_name: "I Am Burned Out"
+  short_description: "Direct answers and minimum code"
+  default_prompt: "Use $i-am-burned-out to answer directly and implement the minimum correct change."
+
+policy:
+  allow_implicit_invocation: true

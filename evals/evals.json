@@ -1,5 +1,5 @@
 {
-  "skill_name": "i-am-burntout",
+  "skill_name": "i-am-burned-out",
   "evals": [
     {
       "id": 1,
@@ -10,7 +10,7 @@
     {
       "id": 2,
       "prompt": "Add a color picker to the settings form in this React app.",
-      "expected_output": "Reaches for <input type=\"color\"> (rung 4) instead of installing a library. Keeps any existing form validation. No new hook, constant, or wrapper component. Leaves an `// burntout:` marker if it skips something the user might expect.",
+      "expected_output": "Reaches for <input type=\"color\"> (rung 4) instead of installing a library. Keeps any existing form validation. No new hook, constant, or wrapper component. Leaves an `// burnedout:` marker if it skips something the user might expect.",
       "files": ["fixtures/settings-form/SettingsForm.tsx"]
     },
     {

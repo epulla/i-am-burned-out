@@ -11,10 +11,11 @@ const ULTRA =
 
 const isLevel = (value: string): value is Level => (LEVELS as readonly string[]).includes(value)
 
-// Rewrites the command's own part; a new one would need a valid id, sessionID, and messageID.
+// Appends to the command's own part; overwriting it would drop the instruction that loads the skill,
+// and a separate part would need a valid id, sessionID, and messageID.
 function reply(parts: { type: string; text?: string }[], line: string) {
   const part = parts.find((p) => p.type === "text")
-  if (part) part.text = `Reply with exactly this and nothing else: ${line}`
+  if (part) part.text = `${part.text ?? ""}\n\nReply with exactly this and nothing else: ${line}`
 }
 
 export default (async () => ({

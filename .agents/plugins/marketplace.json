@@ -1,14 +1,14 @@
 {
-  "name": "i-am-burntout",
+  "name": "i-am-burned-out",
   "interface": {
-    "displayName": "I Am Burntout"
+    "displayName": "I Am Burned Out"
   },
   "plugins": [
     {
-      "name": "i-am-burntout",
+      "name": "i-am-burned-out",
       "source": {
         "source": "url",
-        "url": "https://github.com/epulla/i-am-burntout.git",
+        "url": "https://github.com/epulla/i-am-burned-out.git",
         "ref": "main"
       },
       "policy": {

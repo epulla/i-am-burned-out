@@ -59,7 +59,7 @@ done
 pass 'version synchronization across eight expected files'
 
 ruby -ryaml <<'RUBY'
-path = "skills/i-am-burntout/SKILL.md"
+path = "skills/i-am-burned-out/SKILL.md"
 frontmatter = File.read(path).match(/\A---\r?\n(.*?)^---\r?$/m)
 abort "FAIL #{path} must have frontmatter delimiters" unless frontmatter
 begin
@@ -67,8 +67,8 @@ begin
 rescue Psych::Exception => error
   abort "FAIL invalid YAML in #{path}: #{error.message}"
 end
-unless data.is_a?(Hash) && data["name"] == "i-am-burntout"
-  abort "FAIL #{path} frontmatter name must be i-am-burntout"
+unless data.is_a?(Hash) && data["name"] == "i-am-burned-out"
+  abort "FAIL #{path} frontmatter name must be i-am-burned-out"
 end
 description = data["description"]
 unless description.is_a?(String) && !description.strip.empty? && description.length <= 1024
@@ -89,10 +89,10 @@ normalize_command() {
 if [ ! -f commands/level.md ]; then
   fail 'missing Claude command: commands/level.md'
 fi
-if [ ! -f .opencode/commands/i-am-burntout.md ]; then
-  fail 'missing OpenCode command: .opencode/commands/i-am-burntout.md'
+if [ ! -f .opencode/commands/burnedout.md ]; then
+  fail 'missing OpenCode command: .opencode/commands/burnedout.md'
 fi
-if ! tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/i-am-burntout-check.XXXXXX"); then
+if ! tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/i-am-burned-out-check.XXXXXX"); then
   fail 'cannot create temporary directory'
 fi
 cleanup() {
@@ -100,11 +100,11 @@ cleanup() {
 }
 trap cleanup EXIT
 normalize_command commands/level.md > "$tmp_dir/claude-command"
-normalize_command .opencode/commands/i-am-burntout.md > "$tmp_dir/opencode-command"
+normalize_command .opencode/commands/burnedout.md > "$tmp_dir/opencode-command"
 if ! cmp -s "$tmp_dir/claude-command" "$tmp_dir/opencode-command"; then
   fail 'Claude and OpenCode level command bodies differ'
 fi
-if ! cmp -s commands/burntout-review.md .opencode/commands/burntout-review.md; then
+if ! cmp -s commands/burnedout-review.md .opencode/commands/burnedout-review.md; then
   fail 'Claude and OpenCode review commands differ'
 fi
 pass 'normalized command parity'

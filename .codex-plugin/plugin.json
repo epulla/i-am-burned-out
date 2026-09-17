@@ -1,26 +1,26 @@
 {
-  "name": "i-am-burntout",
+  "name": "i-am-burned-out",
   "version": "0.2.0",
   "description": "Direct coding-agent output and minimal code without cutting safety requirements.",
   "author": {
-    "name": "Erick",
+    "name": "Erick Pulla",
     "url": "https://github.com/epulla"
   },
-  "homepage": "https://github.com/epulla/i-am-burntout",
-  "repository": "https://github.com/epulla/i-am-burntout",
+  "homepage": "https://github.com/epulla/i-am-burned-out",
+  "repository": "https://github.com/epulla/i-am-burned-out",
   "license": "MIT",
   "keywords": ["concise", "yagni", "coding", "skills", "codex"],
   "skills": "./skills/",
   "interface": {
-    "displayName": "I Am Burntout",
+    "displayName": "I Am Burned Out",
     "shortDescription": "Direct answers and minimum code",
     "longDescription": "Make Codex answer directly, avoid speculative abstractions, reuse existing code, and preserve validation, security, error handling, accessibility, and tests.",
-    "developerName": "Erick",
+    "developerName": "Erick Pulla",
     "category": "Productivity",
     "capabilities": ["Instructions"],
-    "websiteURL": "https://github.com/epulla/i-am-burntout",
+    "websiteURL": "https://github.com/epulla/i-am-burned-out",
     "defaultPrompt": [
-      "Use $i-am-burntout for this task.",
+      "Use $i-am-burned-out for this task.",
       "Answer directly and implement the minimum correct change.",
       "Review this change for avoidable code and tool output."
     ],

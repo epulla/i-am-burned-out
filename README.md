@@ -23,6 +23,7 @@ i-am-burned-out puts him inside your coding agent. Terse prose in normal English
 - **One recommendation, not a menu.** It picks an option and says why in one sentence instead of laying out A and B and leaving you to decide.
 - **Numbered steps, capped at five.** One action per line, nothing hidden by grouping.
 - **Minimum code that works.** A seven-rung ladder: skip it, reuse it, stdlib, native platform feature, installed dependency, one line, then the smallest thing that does the job. No helper called once, no config for one case, no interface with one implementation.
+- **Comments only where the code cannot speak.** No narrating the next statement, no file header describing an obvious module, no commented-out code. One line survives when it explains a constraint, a workaround, or a tradeoff the code cannot show.
 - **A safety floor it will not cut.** Input validation at trust boundaries, error handling where data can be lost, auth, secrets, injection defenses, UI accessibility, and a test when the repo has tests.
 - **Builds what you asked for.** If your idea is overkill it says so in one sentence, then builds it anyway.
 - **Scoped tool use.** Locate files before reading bodies, read large files by range, `git diff --stat` before the full diff, native test filters instead of full-suite dumps.
@@ -54,6 +55,8 @@ Eleven for prose, seven rungs for code. Full text in [skills/i-am-burned-out/SKI
 **Prose:** answer first · numbered steps, max 5 · no closers · no unbacked hedging · say what you do not know · normal grammar · specifics over vagueness · minimal formatting · flat errors · one next step · code and errors stay exact.
 
 **Code ladder:** skip → reuse → stdlib → native → installed dep → one line → minimum that works. Read the code first. The ladder is a preference, not a veto: what you ask for gets built. Never cut validation, error handling, security, accessibility, or tests. He has been paged for every one of those.
+
+**Comments:** same weight as code. One line when the code cannot say why, none when it can. A constraint, workaround, or tradeoff stays; narration, obvious file headers, and commented-out code go.
 
 **Tools:** scope commands before running them · locate files before reading bodies · inspect summaries before full diffs · use targeted searches and file ranges · preserve test exit status and diagnostics.
 

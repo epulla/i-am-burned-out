@@ -67,13 +67,15 @@ claude plugin marketplace add epulla/i-am-burned-out
 claude plugin install i-am-burned-out@i-am-burned-out
 ```
 
-Inside Claude Code, run `/i-am-burned-out:level full`. Use `/i-am-burned-out:level` with no argument to report the current level; `/i-am-burned-out:burnedout-review` reviews the current diff without changing it.
+Inside Claude Code, run `/burnedout full`. Use `/burnedout` with no argument to report the current level; `/burnedout-review` reviews the current diff without changing it. Plugin commands are also always available under their namespaced names, `/i-am-burned-out:burnedout` and `/i-am-burned-out:burnedout-review`. Use those if another command already owns the short name.
 
 ### Verify
 
 ```bash
 claude plugin list
 ```
+
+Type `/bu` in Claude Code and confirm `burnedout` and `burnedout-review` appear in the command menu.
 
 ### Update
 

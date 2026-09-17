@@ -49,7 +49,7 @@ claude plugin marketplace add epulla/i-am-burned-out
 claude plugin install i-am-burned-out@i-am-burned-out
 ```
 
-Then start Claude Code. Run `/i-am-burned-out:level` to check the level, `/i-am-burned-out:level ultra` when the codebase has wronged you, or `/i-am-burned-out:burnedout-review` for a delete-list from the current diff.
+Then start Claude Code. Run `/burnedout` to check the level, `/burnedout ultra` when the codebase has wronged you, or `/burnedout-review` for a delete-list from the current diff. If another command already owns those names, use the namespaced forms `/i-am-burned-out:burnedout` and `/i-am-burned-out:burnedout-review`, which are always available.
 
 ### OpenCode
 

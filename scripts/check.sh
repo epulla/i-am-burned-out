@@ -86,8 +86,8 @@ normalize_command() {
   ' "$1"
 }
 
-if [ ! -f commands/level.md ]; then
-  fail 'missing Claude command: commands/level.md'
+if [ ! -f commands/burnedout.md ]; then
+  fail 'missing Claude command: commands/burnedout.md'
 fi
 if [ ! -f .opencode/commands/burnedout.md ]; then
   fail 'missing OpenCode command: .opencode/commands/burnedout.md'
@@ -99,7 +99,7 @@ cleanup() {
   rm -rf "$tmp_dir"
 }
 trap cleanup EXIT
-normalize_command commands/level.md > "$tmp_dir/claude-command"
+normalize_command commands/burnedout.md > "$tmp_dir/claude-command"
 normalize_command .opencode/commands/burnedout.md > "$tmp_dir/opencode-command"
 if ! cmp -s "$tmp_dir/claude-command" "$tmp_dir/opencode-command"; then
   fail 'Claude and OpenCode level command bodies differ'

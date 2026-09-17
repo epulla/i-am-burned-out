@@ -20,7 +20,7 @@ i-am-burned-out puts him inside your coding agent. Terse prose in normal English
 ## What it does
 
 - **Answer first.** The first sentence is the fix or the next action, with the file and line that holds it. No "What's there now" preamble, no closer.
-- **One recommendation, not a menu.** It picks an option and says why in one sentence instead of laying out A and B and leaving you to decide.
+- **A recommendation with choices.** It picks an option and says why in one sentence, so you are not left to choose without guidance.
 - **Numbered steps, capped at five.** One action per line, nothing hidden by grouping.
 - **Minimum code that works.** A seven-rung ladder: skip it, reuse it, stdlib, native platform feature, installed dependency, one line, then the smallest thing that does the job. No helper called once, no config for one case, no interface with one implementation.
 - **Comments only where the code cannot speak.** No narrating the next statement, no file header describing an obvious module, no commented-out code. One line survives when it explains a constraint, a workaround, or a tradeoff the code cannot show.
@@ -37,22 +37,22 @@ Real run, not a mock-up. Same prompt, same model, same repository: Claude Code v
 
 | Without | With i-am-burned-out |
 | --- | --- |
-| <img src="assets/sample-no-burnedout-2026-09-17.png" alt="Claude Code answering without the skill: a What's there now header, options A and B, an Either way section, and no recommendation" width="480"> | <img src="assets/sample-with-burnedout-2026-09-17.png" alt="Claude Code answering with the skill loaded: the answer in the first sentence, a three-step plan, a recommendation, and one next step" width="480"> |
+| <img src="assets/sample-no-burnedout-2026-09-17.png" alt="Claude Code answering without the skill: a What's there now header, options A and B, an Either way section, and Option A marked recommended" width="480"> | <img src="assets/sample-with-burnedout-2026-09-17.png" alt="Claude Code answering with the skill loaded: the answer first, a three-step plan for the recommended option, an alternate option, and one next step" width="480"> |
 
 What the skill changed in that run:
 
 - Opens with the answer — "The sort lives in the API, not the page: `apps/api/src/routes/cf/groups.ts:20`" — instead of a section header.
 - Names the catch once, with the two files that share the endpoint, rather than repeating it under three headings.
-- Three numbered steps instead of an Option A / Option B / Either way layout.
-- Commits to a choice: "I'd go with A, since you only asked about the groups page."
+- Three numbered steps for recommended option, with alternate option described separately rather than expanded into a second plan.
+- Makes recommendation explicit: "I'd go with A, since you only asked about the groups page."
 - Ends with exactly one next step and no recap.
 - Keeps the test step. The plan still updates `groups.test.tsx`, because the repository has tests.
 
 ## The rules
 
-Eleven for prose, seven rungs for code. Full text in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md).
+Nine for prose, seven rungs for code. Full text in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md).
 
-**Prose:** answer first · numbered steps, max 5 · no closers · no unbacked hedging · say what you do not know · normal grammar · specifics over vagueness · minimal formatting · flat errors · one next step · code and errors stay exact.
+**Prose:** answer first · numbered steps, max 5 · concise normal English · specifics · flat errors · minimal formatting · say when you do not know · one next step · no filler or narration.
 
 **Code ladder:** skip → reuse → stdlib → native → installed dep → one line → minimum that works. Read the code first. The ladder is a preference, not a veto: what you ask for gets built. Never cut validation, error handling, security, accessibility, or tests. He has been paged for every one of those.
 
@@ -79,7 +79,7 @@ Then start Claude Code. Run `/burnedout` to check the level, `/burnedout ultra` 
 npx skills add epulla/i-am-burned-out -a opencode -g -y
 ```
 
-Restart OpenCode, then invoke the skill by name. Optional slash-command and plugin install is in [INSTALL.md](INSTALL.md); the plugin makes `/burnedout <level>` real per-session state instead of an instruction the model has to remember, and OpenCode is the only host where levels are enforced that way.
+Restart OpenCode, then invoke the skill by name. Optional slash-command and plugin install is in [INSTALL.md](INSTALL.md); the plugin stores valid levels per session, rejects invalid levels, and re-injects `ultra` on each request.
 
 ### Agent Skills CLI
 
@@ -101,7 +101,7 @@ Copy [AGENTS.md](AGENTS.md) into the project root or the host's persistent instr
 | `ultra` | Full, plus answers of 3 sentences or fewer, no headers, chat responses show diffs only. |
 | `off` | He took the PTO. Normal behavior. |
 
-Levels are per conversation; there are no hooks and changing levels writes nothing to disk. Only `full`, `ultra`, and `off` are valid; invalid levels are rejected without changing the current level. The active level can be lost after context compaction, so run the host command again when needed.
+Levels are per conversation; changing levels writes nothing to disk. The optional OpenCode plugin uses hooks to reject invalid levels and re-inject `ultra` on each request. Without it, the active level can be lost after context compaction, so run the host command again when needed.
 
 ## FAQ
 

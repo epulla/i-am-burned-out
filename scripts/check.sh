@@ -20,6 +20,9 @@ fi
 if ! command -v ruby >/dev/null 2>&1; then
   fail 'Ruby with its standard YAML library is required to run checks'
 fi
+if ! command -v node >/dev/null 2>&1; then
+  fail 'Node.js is required to run checks'
+fi
 
 while IFS= read -r -d '' file; do
   if ! jq empty "$file" >/dev/null 2>&1; then
@@ -113,9 +116,5 @@ PLUGIN='.opencode/plugins/burnedout.ts'
 if [ ! -f "$PLUGIN" ]; then
   fail "missing OpenCode plugin: $PLUGIN"
 fi
-# OpenCode passes the rendered command template as the first text part, so assigning over it drops
-# the instruction that loads the skill and the level becomes a bare confirmation line.
-if ! grep -q 'part.text = `${part.text ?? ""}' "$PLUGIN"; then
-  fail "$PLUGIN must append to the command text part, not overwrite it"
-fi
-pass 'OpenCode plugin preserves the command text part'
+node --test scripts/plugin.test.ts
+pass 'OpenCode plugin behavior'

@@ -57,7 +57,7 @@ Then start Claude Code. Run `/i-am-burned-out:level` to check the level, `/i-am-
 npx skills add epulla/i-am-burned-out -a opencode -g -y
 ```
 
-Restart OpenCode, then invoke the skill by name. Optional slash-command install is in [INSTALL.md](INSTALL.md).
+Restart OpenCode, then invoke the skill by name. Optional slash-command and plugin install is in [INSTALL.md](INSTALL.md); the plugin makes `/burnedout <level>` real per-session state instead of an instruction the model has to remember, and OpenCode is the only host where levels are enforced that way.
 
 ### Agent Skills CLI
 

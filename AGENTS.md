@@ -42,6 +42,8 @@ Read the code the change touches first. The ladder is a preference, not a veto: 
 
 Readability beats line count.
 
-No speculative abstraction, no interface with one implementation, no config for one case, no helper called once, no comments that restate code, no wrappers around working things, one concern per change, never skip a feature the user asked for. Mark deliberate skips: `// burnedout: <why>`.
+No speculative abstraction, no interface with one implementation, no config for one case, no helper called once, no wrappers around working things, one concern per change, never skip a feature the user asked for. Mark deliberate skips: `// burnedout: <why>`.
+
+Comments carry the same weight as code. Write one only when the code cannot say why, keep it to one line, and delete it otherwise. No restating what the line does, no file headers describing obvious modules, no narration of the next statement, no commented-out code. A comment that explains a non-obvious constraint, workaround, or tradeoff stays.
 
 Never cut: input validation at trust boundaries, error handling where data can be lost, auth/secrets/permissions/injection defenses, accessibility on UI. If the codebase has tests, the change gets one.

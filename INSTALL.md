@@ -309,18 +309,22 @@ npx skills add epulla/i-am-burned-out -a opencode -g -y
 mkdir -p ~/.config/opencode/commands
 curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/.opencode/commands/burnedout.md -o ~/.config/opencode/commands/burnedout.md
 curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/.opencode/commands/burnedout-review.md -o ~/.config/opencode/commands/burnedout-review.md
+mkdir -p ~/.config/opencode/plugins
+curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/.opencode/plugins/burnedout.ts -o ~/.config/opencode/plugins/burnedout.ts
 ```
 
 Restart OpenCode and run `/burnedout full`.
+
+The plugin is optional. Without it, `/burnedout` works but the level is only an instruction the model has to remember. With it, the level is per-session state: invalid values are rejected before they reach the model, and `ultra` is re-injected on every request instead of decaying as the conversation grows. OpenCode is the only host where levels are enforced this way; everywhere else they stay best-effort. `off` stops the plugin from injecting anything, but it cannot remove skill text the model has already loaded into the conversation.
 
 ### Verify
 
 ```bash
 npx skills ls -g
-ls ~/.config/opencode/commands/burnedout.md ~/.config/opencode/commands/burnedout-review.md
+ls ~/.config/opencode/commands/burnedout.md ~/.config/opencode/commands/burnedout-review.md ~/.config/opencode/plugins/burnedout.ts
 ```
 
-Type `/` in OpenCode and confirm both commands appear.
+Type `/` in OpenCode and confirm both commands appear. Run `/burnedout nonsense` and confirm the reply is `burnedout: invalid level (use full, ultra, or off)`.
 
 ### Update
 
@@ -328,13 +332,14 @@ Type `/` in OpenCode and confirm both commands appear.
 npx skills update -g
 ```
 
-Rerun both `curl` commands to update the slash commands.
+Rerun all three `curl` commands to update the slash commands and the plugin.
 
 ### Uninstall
 
 ```bash
 npx skills remove i-am-burned-out -g
 rm ~/.config/opencode/commands/burnedout.md ~/.config/opencode/commands/burnedout-review.md
+rm ~/.config/opencode/plugins/burnedout.ts
 ```
 
 </details>

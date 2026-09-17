@@ -108,3 +108,14 @@ if ! cmp -s commands/burnedout-review.md .opencode/commands/burnedout-review.md;
   fail 'Claude and OpenCode review commands differ'
 fi
 pass 'normalized command parity'
+
+PLUGIN='.opencode/plugins/burnedout.ts'
+if [ ! -f "$PLUGIN" ]; then
+  fail "missing OpenCode plugin: $PLUGIN"
+fi
+# OpenCode passes the rendered command template as the first text part, so assigning over it drops
+# the instruction that loads the skill and the level becomes a bare confirmation line.
+if ! grep -q 'part.text = `${part.text ?? ""}' "$PLUGIN"; then
+  fail "$PLUGIN must append to the command text part, not overwrite it"
+fi
+pass 'OpenCode plugin preserves the command text part'

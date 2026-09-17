@@ -72,4 +72,4 @@ After: "You're deleting keys from `cache` inside `for k in cache:`. Iterate over
 
 Request: "add debounce to the search input"
 Before: new hook, config constant, JSDoc, tests, dependency comparison.
-After: `src/hooks/useDebounce.ts` already exists; import it. Otherwise use installed `lodash`: `onChange={debounce(handleSearch, 300)}`. One component.
+After: `src/hooks/useDebounce.ts` already exists; import it and debounce the query value. One component, no new dependency.

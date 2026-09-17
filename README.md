@@ -4,6 +4,7 @@
 
 ## Contents
 
+- [What it does](#what-it-does)
 - [Before and after](#before-and-after)
 - [The rules](#the-rules)
 - [Install](#install)
@@ -16,17 +17,35 @@ You know him. Senior. Three reorgs, two migrations, one rewrite that got cancell
 
 i-am-burned-out puts him inside your coding agent. Terse prose in normal English, minimal code, and nothing cut that would get him paged.
 
+## What it does
+
+- **Answer first.** The first sentence is the fix or the next action, with the file and line that holds it. No "What's there now" preamble, no closer.
+- **One recommendation, not a menu.** It picks an option and says why in one sentence instead of laying out A and B and leaving you to decide.
+- **Numbered steps, capped at five.** One action per line, nothing hidden by grouping.
+- **Minimum code that works.** A seven-rung ladder: skip it, reuse it, stdlib, native platform feature, installed dependency, one line, then the smallest thing that does the job. No helper called once, no config for one case, no interface with one implementation.
+- **A safety floor it will not cut.** Input validation at trust boundaries, error handling where data can be lost, auth, secrets, injection defenses, UI accessibility, and a test when the repo has tests.
+- **Builds what you asked for.** If your idea is overkill it says so in one sentence, then builds it anyway.
+- **Scoped tool use.** Locate files before reading bodies, read large files by range, `git diff --stat` before the full diff, native test filters instead of full-suite dumps.
+- **Two levels and an off switch.** `full`, `ultra` for three sentences and diffs only, `off` when you want the padding back.
+
 ## Before and after
 
-Illustrative before/after replies to concrete coding tasks. The fix comes first; the code stays small.
+Real run, not a mock-up. Same prompt, same model, same repository: Claude Code v2.1.274, Opus 5, `coursillo-app`. The only difference is that the skill was loaded on the right.
 
-| Prompt | Before | After — i-am-burned-out |
-| --- | --- | --- |
-| Inside my async function, `jobs.forEach(async (job) => await save(job)); done();` calls `done()` too early. Save jobs in order and stop if one fails. | The callback passed to `forEach` is asynchronous, but `forEach` itself does not consume the promises it returns. There are several alternatives, including mapping to promises or building a promise chain with `reduce`. Because you need sequential execution, you should use an iteration construct that lets you await each operation before continuing. | `forEach` doesn't await the callbacks. Use a sequential loop; a rejected save stops it before `done()`:<br><br>`for (const job of jobs) {`<br>`  await save(job);`<br>`}`<br>`done();` |
-| My React list doesn't update after `items.push(item); setItems(items);`. | React uses reference equality when deciding whether a state update changes the value. Arrays are reference types, and pushing into an array mutates it without creating a new reference. To address this, you need an immutable update that creates another array containing the previous elements and the new item. | You're passing React the same array you mutated. Replace both statements with:<br><br>`setItems(previous => [...previous, item]);` |
-| `const timeout = options.timeout \|\| 30;` turns my zero-second timeout into 30 seconds. Keep zero; default only when missing or null. | JavaScript distinguishes between falsy values and absent values. Zero belongs to the falsy category, along with empty strings and false, so the logical OR operator selects the fallback. You need to check specifically for null and undefined rather than using a general truthiness check. | `\|\|` discards zero. `??` defaults only for `null` or `undefined`:<br><br>`const timeout = options.timeout ?? 30;` |
-| In Python, remove duplicate names from `names = ["api", "web", "api"]` while keeping the first occurrence's order. | I'll track the names we've already encountered in a set and keep a separate list for the result. For each name, we'll check membership in the set, add unseen names to both collections, and return the accumulated list once the loop finishes. | Dictionaries preserve insertion order:<br><br>`names = list(dict.fromkeys(names))`<br><br>Result: `["api", "web"]`. |
-| I have a valid JavaScript `Date` named `date`. Display it in London time with the date and time, including daylight-saving changes. | I'll add a date-formatting library and a helper that accepts a date, a time-zone identifier, and a format string. The helper will convert the instant into the selected zone and format the result, giving us a reusable place to handle future display requirements. | `Intl` handles the time zone and daylight saving:<br><br>`new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/London", dateStyle: "medium", timeStyle: "short" }).format(date)` |
+**Prompt:** `let's plan a fix to update for sorting the groups from the group page by created_time instead of alphabetically`
+
+| Without | With i-am-burned-out |
+| --- | --- |
+| <img src="assets/sample-no-burnedout-2026-09-17.png" alt="Claude Code answering without the skill: a What's there now header, options A and B, an Either way section, and no recommendation" width="480"> | <img src="assets/sample-with-burnedout-2026-09-17.png" alt="Claude Code answering with the skill loaded: the answer in the first sentence, a three-step plan, a recommendation, and one next step" width="480"> |
+
+What the skill changed in that run:
+
+- Opens with the answer — "The sort lives in the API, not the page: `apps/api/src/routes/cf/groups.ts:20`" — instead of a section header.
+- Names the catch once, with the two files that share the endpoint, rather than repeating it under three headings.
+- Three numbered steps instead of an Option A / Option B / Either way layout.
+- Commits to a choice: "I'd go with A, since you only asked about the groups page."
+- Ends with exactly one next step and no recap.
+- Keeps the test step. The plan still updates `groups.test.tsx`, because the repository has tests.
 
 ## The rules
 
@@ -83,21 +102,9 @@ Levels are per conversation; there are no hooks and changing levels writes nothi
 
 ## FAQ
 
-### Can I use i-am-burned-out with caveman?
+### Can I use i-am-burned-out with [caveman](https://github.com/JuliusBrussee/caveman)?
 
-Yes. Both can be active. i-am-burned-out governs safety, code decisions, and tool discipline; caveman governs prose compression. When they overlap, caveman's article-dropping and fragments override i-am-burned-out's normal-grammar preference.
-
-### Do they conflict?
-
-Only on prose style. Their core rules agree: remove filler, keep technical substance, and leave code unchanged.
-
-### Does caveman replace i-am-burned-out?
-
-No. Caveman does not provide i-am-burned-out's safety floor, code ladder, or testing rules. Use both when you want those rules with more compressed replies.
-
-### Can I use only one?
-
-Yes. Install either skill independently. Use [caveman](https://github.com/JuliusBrussee/caveman) for compression alone, or i-am-burned-out for concise normal-English coding guidance.
+Yes, together or alone. They only overlap on prose style, where caveman's fragments win; the safety floor, code ladder, and tool rules are i-am-burned-out's alone.
 
 ## Related
 

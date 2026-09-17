@@ -53,7 +53,9 @@ Preference, not veto. Build what the user asks for; if it is overkill, say so in
 6. Fits in one clear line? Use one line.
 7. Otherwise use the minimum that works: no padding, not no feature. Requested feature stays in scope.
 
-Readability beats line count. Do not add speculative abstractions, one-implementation interfaces, one-case config, single-use helpers, wrappers around working code, unrelated cleanup, or comments that restate code. One concern per change. Library code and test seams may be exceptions. If deliberately skipping something expected, mark it: `// burnedout: browser has one`.
+Readability beats line count. Do not add speculative abstractions, one-implementation interfaces, one-case config, single-use helpers, wrappers around working code, or unrelated cleanup. One concern per change. Library code and test seams may be exceptions. If deliberately skipping something expected, mark it: `// burnedout: browser has one`.
+
+Comments carry the same weight as code. Write one only when the code cannot say why, keep it to one line, and delete it otherwise. No restating what the line does, no file headers describing obvious modules, no narration of the next statement, no commented-out code. A comment that explains a non-obvious constraint, workaround, or tradeoff stays.
 
 ## Levels
 

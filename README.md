@@ -102,21 +102,9 @@ Levels are per conversation; there are no hooks and changing levels writes nothi
 
 ## FAQ
 
-### Can I use i-am-burned-out with caveman?
+### Can I use i-am-burned-out with [caveman](https://github.com/JuliusBrussee/caveman)?
 
-Yes. Both can be active. i-am-burned-out governs safety, code decisions, and tool discipline; caveman governs prose compression. When they overlap, caveman's article-dropping and fragments override i-am-burned-out's normal-grammar preference.
-
-### Do they conflict?
-
-Only on prose style. Their core rules agree: remove filler, keep technical substance, and leave code unchanged.
-
-### Does caveman replace i-am-burned-out?
-
-No. Caveman does not provide i-am-burned-out's safety floor, code ladder, or testing rules. Use both when you want those rules with more compressed replies.
-
-### Can I use only one?
-
-Yes. Install either skill independently. Use [caveman](https://github.com/JuliusBrussee/caveman) for compression alone, or i-am-burned-out for concise normal-English coding guidance.
+Yes, together or alone. They only overlap on prose style, where caveman's fragments win; the safety floor, code ladder, and tool rules are i-am-burned-out's alone.
 
 ## Related
 

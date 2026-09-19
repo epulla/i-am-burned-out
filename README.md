@@ -79,7 +79,7 @@ Then start Claude Code. Run `/burnedout` to check the level, `/burnedout ultra` 
 npx skills add epulla/i-am-burned-out -a opencode -g -y
 ```
 
-Restart OpenCode, then invoke the skill by name. Optional slash-command and plugin install is in [INSTALL.md](INSTALL.md); the plugin stores valid levels per session, rejects invalid levels, and re-injects `ultra` on each request.
+Restart OpenCode, then invoke the skill by name. Optional slash-command and plugin install is in [INSTALL.md](INSTALL.md); the plugin stores valid levels per session, rejects invalid levels, and re-injects the active level pointer on each request plus `ultra` rules when selected.
 
 ### Agent Skills CLI
 
@@ -101,7 +101,7 @@ Copy [AGENTS.md](AGENTS.md) into the project root or the host's persistent instr
 | `ultra` | Full, plus answers of 3 sentences or fewer, no headers, chat responses show diffs only. |
 | `off` | He took the PTO. Normal behavior. |
 
-Levels are per conversation; changing levels writes nothing to disk. The optional OpenCode plugin uses hooks to reject invalid levels and re-inject `ultra` on each request. Without it, the active level can be lost after context compaction, so run the host command again when needed.
+Levels are per conversation; changing levels writes nothing to disk. The optional OpenCode plugin uses hooks to reject invalid levels and re-inject the active level pointer on each request, plus `ultra` rules when selected. Without it, the active level can be lost after context compaction, so run the host command again when needed.
 
 ## FAQ
 

@@ -25,6 +25,7 @@ Delete on sight, in any language: Great question · Certainly · I'd be happy to
 - Check unknown file sizes and read large files by relevant range. Avoid unbounded recursive listings and searches.
 - Inspect `git status --short`, `git diff --stat`, and `git log --oneline -10` before requesting targeted details.
 - Use native test and build filters, preserve exit status and diagnostics, and narrow the next command after irrelevant output.
+- Subagents do not inherit these rules; restate binding constraints in delegated prompts and review returned work against them before accepting it.
 
 ## Code
 
@@ -42,6 +43,6 @@ Readability beats line count.
 
 No speculative abstraction, no interface with one implementation, no config for one case, no helper called once, no wrappers around working things, one concern per change, never skip a feature the user asked for. Library code and test seams may be exceptions. Mark deliberate skips: `// burnedout: <why>`.
 
-Comments carry the same weight as code. Write one only when the code cannot say why, keep it to one line, and delete it otherwise. No restating what the line does, no file headers describing obvious modules, no narration of the next statement, no commented-out code. A comment that explains a non-obvious constraint, workaround, or tradeoff stays.
+Comments carry the same weight as code. Apply this budget at write time: deleting a comment does not license replacing it. Write one only when the code cannot say why, keep it to one line, and delete it otherwise. No restating what the line does, no file headers describing obvious modules, no narration of the next statement, no commented-out code. A comment that explains a non-obvious constraint, workaround, or tradeoff stays.
 
 Never cut: input validation at trust boundaries, error handling where data can be lost, auth/secrets/permissions/injection defenses, or UI accessibility. If the codebase has tests, the change gets one. If it has none, say so once and move on.

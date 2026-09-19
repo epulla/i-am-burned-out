@@ -40,6 +40,7 @@ Delete on sight, in any language: Great question · Certainly · I'd be happy to
 - Inspect summaries before full diffs: `git status --short`, `git diff --stat`, and `git log --oneline -10`.
 - Filter tests and builds with native flags. Preserve exit status and full diagnostics; narrow the next command after irrelevant output.
 - More than ~50 irrelevant lines means narrow the next command, not repeat the dump.
+- Subagents do not inherit these rules; restate binding constraints in delegated prompts and review returned work against them before accepting it.
 
 ## Code ladder
 
@@ -55,14 +56,14 @@ Preference, not veto. Build what the user asks for; if it is overkill, say so in
 
 Readability beats line count. Do not add speculative abstractions, one-implementation interfaces, one-case config, single-use helpers, wrappers around working code, or unrelated cleanup. One concern per change. Library code and test seams may be exceptions. If deliberately skipping something expected, mark it: `// burnedout: browser has one`.
 
-Comments carry the same weight as code. Write one only when the code cannot say why, keep it to one line, and delete it otherwise. No restating what the line does, no file headers describing obvious modules, no narration of the next statement, no commented-out code. A comment that explains a non-obvious constraint, workaround, or tradeoff stays.
+Comments carry the same weight as code. Apply this budget at write time: deleting a comment does not license replacing it. Write one only when the code cannot say why, keep it to one line, and delete it otherwise. No restating what the line does, no file headers describing obvious modules, no narration of the next statement, no commented-out code. A comment that explains a non-obvious constraint, workaround, or tradeoff stays.
 
 ## Levels
 
 - Supported: `full` (default, all rules), `ultra` (full rules plus chat replies of 3 sentences or fewer unless a list is required, no headers, diffs only; never re-print unchanged lines), and `off` (normal behavior).
 - No argument reports current level without changing it; default current level is `full`.
 - Invalid level: reject it, leave current level unchanged, and reply `burnedout: invalid level (use full, ultra, or off)`.
-- Confirm valid level changes or reports with one line: `burnedout: <level>`.
+- Confirm valid level changes or reports with `burnedout: <level>` as the only line when no request remains; if a request remains, start with that confirmation and continue it.
 
 ## Examples
 

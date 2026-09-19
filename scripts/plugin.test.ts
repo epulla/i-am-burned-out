@@ -11,9 +11,7 @@ const hooks = await plugin()
 const commandBefore = hooks["command.execute.before"]
 const systemTransform = hooks["experimental.chat.system.transform"]
 const toolBefore = hooks["tool.execute.before"]
-const duplicateCommandBefore = (await plugin())["command.execute.before"]
-const duplicateSystemTransform = (await plugin())["experimental.chat.system.transform"]
-const duplicateToolBefore = (await plugin())["tool.execute.before"]
+const duplicate = await plugin()
 
 function textPart(sessionID: string, text = RENDERED_COMMAND) {
   return {
@@ -135,7 +133,7 @@ test("reply instruction is not appended twice", async () => {
     { parts },
   )
   const firstText = parts[0].text
-  await duplicateCommandBefore(
+  await duplicate["command.execute.before"](
     { command: "burnedout", arguments: "", sessionID },
     { parts },
   )
@@ -152,7 +150,7 @@ test("system instructions are not injected twice", async () => {
 
   const system: string[] = []
   await systemTransform({ sessionID }, { system })
-  await duplicateSystemTransform({ sessionID }, { system })
+  await duplicate["experimental.chat.system.transform"]({ sessionID }, { system })
   assert.deepEqual(system, [POINTER, ULTRA])
 })
 
@@ -218,7 +216,7 @@ test("subagent pointer is not appended twice", async () => {
 
   const args = { prompt: "find the bug" }
   await toolBefore({ tool: "task", sessionID }, { args })
-  await duplicateToolBefore({ tool: "task", sessionID }, { args })
+  await duplicate["tool.execute.before"]({ tool: "task", sessionID }, { args })
   assert.equal(args.prompt, `find the bug\n\n${POINTER}\n\n${ULTRA}`)
 })
 

@@ -1,5 +1,9 @@
 # i-am-burned-out
 
+<p align="center">
+  <img src="assets/burned-out-logo.png" alt="Hand-drawn stick figure with a frowning face and arms raised, standing in front of red, orange, and yellow flames" width="240">
+</p>
+
 *He has energy for the answer. Not for the intro.*
 
 ## Contents

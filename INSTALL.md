@@ -317,7 +317,7 @@ curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/.openco
 
 Restart OpenCode and run `/burnedout full`.
 
-The plugin is optional. Without it, `/burnedout` works but the level is only an instruction the model has to remember. With it, the level is per-session state: invalid values leave state unchanged and receive the exact invalid-level response, while the active level pointer is re-injected on every request, with `ultra` rules added when selected. OpenCode is the only host where levels are enforced this way; everywhere else they stay best-effort. `off` stops the plugin from injecting anything, but it cannot remove skill text the model has already loaded into the conversation.
+The plugin is optional. Without it, `/burnedout` works but the level is only an instruction the model has to remember. With it, the level is per-session state: invalid values leave state unchanged and receive the exact invalid-level response, while the active level pointer is re-injected on every request, with `ultra` rules added when selected, and delegated subagent prompts inherit the active level. OpenCode is the only host where levels are enforced this way; everywhere else they stay best-effort. `off` stops the plugin from injecting anything, but it cannot remove skill text the model has already loaded into the conversation.
 
 ### Verify
 

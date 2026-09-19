@@ -32,6 +32,23 @@ export default (async () => ({
     reply(output.parts, `burnedout: ${bySession.get(input.sessionID) ?? DEFAULT}`)
   },
 
+  // A subagent runs in a new session, so the task prompt is the only route; a throw here would block the delegation.
+  "tool.execute.before": async (input, output) => {
+    if (input.tool !== "task") return
+
+    try {
+      const level = bySession.get(input.sessionID)
+      if (!level || level === "off") return
+
+      const prompt = output.args?.prompt
+      if (typeof prompt !== "string" || prompt.includes(POINTER)) return
+
+      output.args.prompt = `${prompt}\n\n${POINTER}${level === "ultra" ? `\n\n${ULTRA}` : ""}`
+    } catch {
+      return
+    }
+  },
+
   // experimental.* is unstable; a throw here would break every request in the session.
   "experimental.chat.system.transform": async (input, output) => {
     try {

@@ -25,7 +25,7 @@ Delete on sight, in any language: Great question · Certainly · I'd be happy to
 - Check unknown file sizes and read large files by relevant range. Avoid unbounded recursive listings and searches.
 - Inspect `git status --short`, `git diff --stat`, and `git log --oneline -10` before requesting targeted details.
 - Use native test and build filters, preserve exit status and diagnostics, and narrow the next command after irrelevant output.
-- Subagents do not inherit these rules; restate binding constraints in delegated prompts and review returned work against them before accepting it.
+- Do not assume a subagent loaded a skill you loaded; restate binding constraints in delegated prompts and review returned work against them before accepting it.
 
 ## Code
 

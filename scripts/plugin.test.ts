@@ -10,8 +10,10 @@ const ULTRA =
 const hooks = await plugin()
 const commandBefore = hooks["command.execute.before"]
 const systemTransform = hooks["experimental.chat.system.transform"]
+const toolBefore = hooks["tool.execute.before"]
 const duplicateCommandBefore = (await plugin())["command.execute.before"]
 const duplicateSystemTransform = (await plugin())["experimental.chat.system.transform"]
+const duplicateToolBefore = (await plugin())["tool.execute.before"]
 
 function textPart(sessionID: string, text = RENDERED_COMMAND) {
   return {
@@ -158,4 +160,82 @@ test("inactive sessions do not inject a pointer", async () => {
   const system: string[] = []
   await systemTransform({ sessionID: "plugin-test-inactive" }, { system })
   assert.deepEqual(system, [])
+})
+
+test("subagent prompt inherits the parent level", async () => {
+  const fullSessionID = "plugin-test-task-full"
+  await commandBefore(
+    { command: "burnedout", arguments: "full", sessionID: fullSessionID },
+    { parts: [textPart(fullSessionID)] },
+  )
+  const fullArgs = { prompt: "find the bug" }
+  await toolBefore({ tool: "task", sessionID: fullSessionID }, { args: fullArgs })
+  assert.equal(fullArgs.prompt, `find the bug\n\n${POINTER}`)
+
+  const ultraSessionID = "plugin-test-task-ultra"
+  await commandBefore(
+    { command: "burnedout", arguments: "ultra", sessionID: ultraSessionID },
+    { parts: [textPart(ultraSessionID)] },
+  )
+  const ultraArgs = { prompt: "find the bug" }
+  await toolBefore({ tool: "task", sessionID: ultraSessionID }, { args: ultraArgs })
+  assert.equal(ultraArgs.prompt, `find the bug\n\n${POINTER}\n\n${ULTRA}`)
+})
+
+test("subagent prompt is untouched when inactive or off", async () => {
+  const inactiveArgs = { prompt: "find the bug" }
+  await toolBefore({ tool: "task", sessionID: "plugin-test-task-inactive" }, { args: inactiveArgs })
+  assert.equal(inactiveArgs.prompt, "find the bug")
+
+  const offSessionID = "plugin-test-task-off"
+  await commandBefore(
+    { command: "burnedout", arguments: "off", sessionID: offSessionID },
+    { parts: [textPart(offSessionID)] },
+  )
+  const offArgs = { prompt: "find the bug" }
+  await toolBefore({ tool: "task", sessionID: offSessionID }, { args: offArgs })
+  assert.equal(offArgs.prompt, "find the bug")
+})
+
+test("other tools are left alone", async () => {
+  const sessionID = "plugin-test-task-other-tool"
+  await commandBefore(
+    { command: "burnedout", arguments: "ultra", sessionID },
+    { parts: [textPart(sessionID)] },
+  )
+
+  const args = { prompt: "find the bug" }
+  await toolBefore({ tool: "read", sessionID }, { args })
+  assert.equal(args.prompt, "find the bug")
+})
+
+test("subagent pointer is not appended twice", async () => {
+  const sessionID = "plugin-test-task-idempotent"
+  await commandBefore(
+    { command: "burnedout", arguments: "ultra", sessionID },
+    { parts: [textPart(sessionID)] },
+  )
+
+  const args = { prompt: "find the bug" }
+  await toolBefore({ tool: "task", sessionID }, { args })
+  await duplicateToolBefore({ tool: "task", sessionID }, { args })
+  assert.equal(args.prompt, `find the bug\n\n${POINTER}\n\n${ULTRA}`)
+})
+
+test("malformed task args do not throw", async () => {
+  const sessionID = "plugin-test-task-malformed"
+  await commandBefore(
+    { command: "burnedout", arguments: "full", sessionID },
+    { parts: [textPart(sessionID)] },
+  )
+
+  const args: Record<string, unknown> = {}
+  await toolBefore({ tool: "task", sessionID }, { args })
+  assert.deepEqual(args, {})
+
+  await toolBefore({ tool: "task", sessionID }, {})
+
+  const numericArgs = { prompt: 42 }
+  await toolBefore({ tool: "task", sessionID }, { args: numericArgs })
+  assert.deepEqual(numericArgs, { prompt: 42 })
 })

@@ -1,6 +1,6 @@
 {
   "name": "i-am-burned-out",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Direct coding-agent output and minimal code without cutting safety requirements.",
   "contextFileName": "GEMINI.md"
 }

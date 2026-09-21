@@ -6,6 +6,8 @@ const RENDERED_COMMAND = "rendered command template"
 const POINTER = "burnedout: follow i-am-burned-out skill instructions."
 const ULTRA =
   "burnedout level ultra: keep chat replies to 3 sentences or fewer unless a list is required, no headers, diffs only, never re-print unchanged lines."
+const SUBAGENT =
+  "burnedout: reply with findings only, file:line references, no narration, no restatement of the brief."
 
 const hooks = await plugin()
 const commandBefore = hooks["command.execute.before"]
@@ -168,7 +170,7 @@ test("subagent prompt inherits the parent level", async () => {
   )
   const fullArgs = { prompt: "find the bug" }
   await toolBefore({ tool: "task", sessionID: fullSessionID }, { args: fullArgs })
-  assert.equal(fullArgs.prompt, `find the bug\n\n${POINTER}`)
+  assert.equal(fullArgs.prompt, `find the bug\n\n${POINTER}\n\n${SUBAGENT}`)
 
   const ultraSessionID = "plugin-test-task-ultra"
   await commandBefore(
@@ -177,7 +179,7 @@ test("subagent prompt inherits the parent level", async () => {
   )
   const ultraArgs = { prompt: "find the bug" }
   await toolBefore({ tool: "task", sessionID: ultraSessionID }, { args: ultraArgs })
-  assert.equal(ultraArgs.prompt, `find the bug\n\n${POINTER}\n\n${ULTRA}`)
+  assert.equal(ultraArgs.prompt, `find the bug\n\n${POINTER}\n\n${SUBAGENT}\n\n${ULTRA}`)
 })
 
 test("subagent prompt is untouched when inactive or off", async () => {
@@ -217,7 +219,7 @@ test("subagent pointer is not appended twice", async () => {
   const args = { prompt: "find the bug" }
   await toolBefore({ tool: "task", sessionID }, { args })
   await duplicate["tool.execute.before"]({ tool: "task", sessionID }, { args })
-  assert.equal(args.prompt, `find the bug\n\n${POINTER}\n\n${ULTRA}`)
+  assert.equal(args.prompt, `find the bug\n\n${POINTER}\n\n${SUBAGENT}\n\n${ULTRA}`)
 })
 
 test("malformed task args do not throw", async () => {

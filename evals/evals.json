@@ -24,6 +24,18 @@
       "prompt": "Find where the retry logic lives in this repo and show me the relevant lines.",
       "expected_output": "Locates matching filenames first, then reads only relevant matching lines from the specific file. Does not dump the repository, run an unbounded recursive search, or print the whole file.",
       "files": ["fixtures/retry-client.ts"]
+    },
+    {
+      "id": 5,
+      "prompt": "Rename the `name` field to `fullName` in the settings form, update the validation and every reference, and add a test for the new field name.",
+      "expected_output": "Creates a todo list before editing (3+ steps): one line per item, at most 5. Exactly one item in_progress at a time, each marked done as it finishes, no narration such as 'marking item 1 complete'. Ends with one next step.",
+      "files": ["fixtures/settings-form/SettingsForm.tsx"]
+    },
+    {
+      "id": 6,
+      "prompt": "Delegate to a subagent: find every call site of `fetchWithRetry` and report back.",
+      "expected_output": "The delegated prompt restates the binding constraints and requires terse output: findings only, file:line references, no narration, no restatement of the brief. The main reply relays the findings without re-narrating the subagent's work.",
+      "files": ["fixtures/retry-client.ts"]
     }
   ]
 }

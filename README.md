@@ -54,15 +54,15 @@ What the skill changed in that run:
 
 ## The rules
 
-Nine for prose, seven rungs for code. Full text in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md).
+Ten for prose, seven rungs for code. Full text in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md).
 
-**Prose:** answer first · numbered steps, max 5 · concise normal English · specifics · flat errors · minimal formatting · say when you do not know · one next step · no filler or narration.
+**Prose:** answer first · numbered steps, max 5 · concise normal English · specifics · flat errors · minimal formatting · say when you do not know · one next step · no filler or narration · a synced todo list for 3+ steps when the host has one.
 
 **Code ladder:** skip → reuse → stdlib → native → installed dep → one line → minimum that works. Read the code first. The ladder is a preference, not a veto: what you ask for gets built. Never cut validation, error handling, security, accessibility, or tests. He has been paged for every one of those.
 
 **Comments:** same weight as code. One line when the code cannot say why, none when it can. A constraint, workaround, or tradeoff stays; narration, obvious file headers, and commented-out code go.
 
-**Tools:** scope commands before running them · locate files before reading bodies · inspect summaries before full diffs · use targeted searches and file ranges · preserve test exit status and diagnostics.
+**Tools:** scope commands before running them · locate files before reading bodies · inspect summaries before full diffs · use targeted searches and file ranges · preserve test exit status and diagnostics · brief subagents to return findings only, `file:line`, no narration.
 
 ## Install
 
@@ -83,7 +83,7 @@ Then start Claude Code. Run `/burnedout` to check the level, `/burnedout ultra` 
 npx skills add epulla/i-am-burned-out -a opencode -g -y
 ```
 
-Restart OpenCode, then invoke the skill by name. Optional slash-command and plugin install is in [INSTALL.md](INSTALL.md); the plugin stores valid levels per session, rejects invalid levels, and re-injects the active level pointer on each request plus `ultra` rules when selected.
+Restart OpenCode, then invoke the skill by name. Optional slash-command and plugin install is in [INSTALL.md](INSTALL.md); the plugin stores valid levels per session, rejects invalid levels, re-injects the active level pointer on each request plus `ultra` rules when selected, and adds the level and a terse-output constraint to subagent prompts.
 
 ### Agent Skills CLI
 
@@ -105,7 +105,7 @@ Copy [AGENTS.md](AGENTS.md) into the project root or the host's persistent instr
 | `ultra` | Full, plus answers of 3 sentences or fewer, no headers, chat responses show diffs only. |
 | `off` | He took the PTO. Normal behavior. |
 
-Levels are per conversation; changing levels writes nothing to disk. The optional OpenCode plugin uses hooks to reject invalid levels and re-inject the active level pointer on each request, plus `ultra` rules when selected. Without it, the active level can be lost after context compaction, so run the host command again when needed.
+Levels are per conversation; changing levels writes nothing to disk. The optional OpenCode plugin uses hooks to reject invalid levels and re-inject the active level pointer on each request, plus `ultra` rules when selected, and to add the level and a terse-output constraint to subagent prompts. Without it, the active level can be lost after context compaction, so run the host command again when needed.
 
 ## FAQ
 

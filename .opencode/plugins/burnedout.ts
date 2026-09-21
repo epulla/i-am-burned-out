@@ -9,6 +9,8 @@ const bySession = new Map<string, Level>()
 const POINTER = "burnedout: follow i-am-burned-out skill instructions."
 const ULTRA =
   "burnedout level ultra: keep chat replies to 3 sentences or fewer unless a list is required, no headers, diffs only, never re-print unchanged lines."
+const SUBAGENT =
+  "burnedout: reply with findings only, file:line references, no narration, no restatement of the brief."
 
 const isLevel = (value: string): value is Level => (LEVELS as readonly string[]).includes(value)
 
@@ -42,7 +44,7 @@ export default (async () => ({
     const prompt = output.args?.prompt
     if (typeof prompt !== "string" || prompt.includes(POINTER)) return
 
-    output.args.prompt = `${prompt}\n\n${POINTER}${level === "ultra" ? `\n\n${ULTRA}` : ""}`
+    output.args.prompt = `${prompt}\n\n${POINTER}\n\n${SUBAGENT}${level === "ultra" ? `\n\n${ULTRA}` : ""}`
   },
 
   // experimental.* is unstable; a throw here would break every request in the session.

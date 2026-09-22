@@ -42,6 +42,7 @@ This route follows [AstronClaw's custom-skills documentation](https://github.com
 1. Download [`SKILL.md`](https://raw.githubusercontent.com/epulla/i-am-burned-out/main/skills/i-am-burned-out/SKILL.md).
 2. Open **My skills**, choose **New**, and upload the file.
 3. Confirm the imported skill is named `i-am-burned-out`, then enable it.
+4. Optional: repeat with [`burnedout-review/SKILL.md`](https://raw.githubusercontent.com/epulla/i-am-burned-out/main/skills/burnedout-review/SKILL.md) for the review skill.
 
 ### Verify
 
@@ -103,7 +104,7 @@ codex plugin marketplace add epulla/i-am-burned-out --ref main
 codex plugin add i-am-burned-out@i-am-burned-out
 ```
 
-Inside Codex, invoke `$i-am-burned-out`. Add `at full`, `at ultra`, or `at off` to select a level. Other levels are rejected without changing the current level.
+Inside Codex, invoke `$i-am-burned-out`. Add `at full`, `at ultra`, or `at off` to select a level. Other levels are rejected without changing the current level. Invoke `$burnedout-review` for a delete-list from the current branch.
 
 ### Verify
 
@@ -255,9 +256,10 @@ Run the command matching the scope you installed.
 
 ```bash
 hermes skills install epulla/i-am-burned-out/skills/i-am-burned-out
+hermes skills install epulla/i-am-burned-out/skills/burnedout-review
 ```
 
-Start a new Hermes session and run `/i-am-burned-out`.
+The second command is optional and adds the review skill. Start a new Hermes session and run `/i-am-burned-out` or `/burnedout-review`.
 
 ### Verify
 
@@ -269,12 +271,14 @@ hermes skills list
 
 ```bash
 hermes skills update i-am-burned-out
+hermes skills update burnedout-review
 ```
 
 ### Uninstall
 
 ```bash
 hermes skills uninstall i-am-burned-out
+hermes skills uninstall burnedout-review
 ```
 
 </details>
@@ -315,7 +319,7 @@ mkdir -p ~/.config/opencode/plugins
 curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/.opencode/plugins/burnedout.ts -o ~/.config/opencode/plugins/burnedout.ts
 ```
 
-Restart OpenCode and run `/burnedout full`.
+Restart OpenCode and run `/burnedout full`. The `npx skills add` command installs both skills; `/burnedout-review` loads `burnedout-review`.
 
 The plugin is optional. Without it, `/burnedout` works but the level is only an instruction the model has to remember. With it, the level is per-session state: invalid values leave state unchanged and receive the exact invalid-level response, while the active level pointer is re-injected on every request, with `ultra` rules added when selected, and delegated subagent prompts inherit the active level plus a terse-output constraint (findings only, `file:line`, no narration). OpenCode is the only host where levels are enforced this way; everywhere else they stay best-effort. `off` stops the plugin from injecting anything, but it cannot remove skill text the model has already loaded into the conversation.
 
@@ -458,12 +462,12 @@ For a filesystem install:
 ```bash
 git clone https://github.com/epulla/i-am-burned-out
 mkdir -p ~/.agents/skills
-cp -R i-am-burned-out/skills/i-am-burned-out ~/.agents/skills/
+cp -R i-am-burned-out/skills/i-am-burned-out i-am-burned-out/skills/burnedout-review ~/.agents/skills/
 ```
 
 ### Verify
 
-Open Skills manager and confirm `i-am-burned-out` appears.
+Open Skills manager and confirm `i-am-burned-out` appears, plus `burnedout-review` for a filesystem install.
 
 ### Update
 
@@ -471,7 +475,7 @@ Re-import the URL, or run `git pull` and copy the skill folder again.
 
 ### Uninstall
 
-Remove the skill in Skills manager or delete `~/.agents/skills/i-am-burned-out`.
+Remove the skill in Skills manager or delete `~/.agents/skills/i-am-burned-out` and `~/.agents/skills/burnedout-review`.
 
 </details>
 
@@ -525,7 +529,7 @@ The shipped skill allows automatic invocation. For deterministic activation, use
 
 ## Troubleshooting
 
-**Skill or command missing.** Restart the agent, then use the host's verify command. Confirm `skills/i-am-burned-out/SKILL.md` kept its filename, folder name, and `name: i-am-burned-out` frontmatter.
+**Skill or command missing.** Restart the agent, then use the host's verify command. Confirm each `skills/<name>/SKILL.md` kept its filename, and that its folder name matches its `name:` frontmatter (`i-am-burned-out`, `burnedout-review`).
 
 **Claude marketplace add fails.** Use `epulla/i-am-burned-out`, not a local subdirectory. Local installs must point at repository root.
 

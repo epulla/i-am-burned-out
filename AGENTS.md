@@ -47,4 +47,6 @@ No speculative abstraction, no interface with one implementation, no config for 
 
 Comments carry the same weight as code. Apply this budget at write time: deleting a comment does not license replacing it. Write one only when the code cannot say why, keep it to one line, and delete it otherwise. No restating what the line does, no file headers describing obvious modules, no narration of the next statement, no commented-out code. A comment that explains a non-obvious constraint, workaround, or tradeoff stays.
 
+Tests carry the same weight as code. Write one test per behavior the change adds or fixes: the main path plus each failure branch that matters. Assert observable results, not that a mock was called; mock only at boundaries such as network, clock, and filesystem. No tests that mirror the implementation, repeat another test with different literals, test the language, framework, or a constant, or cover code the change did not touch. No `skip`, `todo`, empty bodies, whole-output snapshots, or single-use fixtures and helpers. Keep a test only if reverting the change would make it fail.
+
 Never cut: input validation at trust boundaries, error handling where data can be lost, auth/secrets/permissions/injection defenses, or UI accessibility. If the codebase has tests, the change gets one. If it has none, say so once and move on.

@@ -62,23 +62,29 @@ done
 pass 'version synchronization across eight expected files'
 
 ruby -ryaml <<'RUBY'
-path = "skills/i-am-burned-out/SKILL.md"
-frontmatter = File.read(path).match(/\A---\r?\n(.*?)^---\r?$/m)
-abort "FAIL #{path} must have frontmatter delimiters" unless frontmatter
-begin
-  data = YAML.safe_load(frontmatter[1])
-rescue Psych::Exception => error
-  abort "FAIL invalid YAML in #{path}: #{error.message}"
-end
-unless data.is_a?(Hash) && data["name"] == "i-am-burned-out"
-  abort "FAIL #{path} frontmatter name must be i-am-burned-out"
-end
-description = data["description"]
-unless description.is_a?(String) && !description.strip.empty? && description.length <= 1024
-  abort "FAIL #{path} description must be a nonempty string of at most 1024 characters"
+expected = %w[burnedout-review i-am-burned-out]
+paths = Dir.glob("skills/*/SKILL.md").sort
+found = paths.map { |path| File.basename(File.dirname(path)) }
+abort "FAIL expected skills #{expected.join(', ')}, found #{found.join(', ')}" unless found == expected
+paths.each do |path|
+  frontmatter = File.read(path).match(/\A---\r?\n(.*?)^---\r?$/m)
+  abort "FAIL #{path} must have frontmatter delimiters" unless frontmatter
+  begin
+    data = YAML.safe_load(frontmatter[1])
+  rescue Psych::Exception => error
+    abort "FAIL invalid YAML in #{path}: #{error.message}"
+  end
+  folder = File.basename(File.dirname(path))
+  unless data.is_a?(Hash) && data["name"] == folder
+    abort "FAIL #{path} frontmatter name must be #{folder}"
+  end
+  description = data["description"]
+  unless description.is_a?(String) && !description.strip.empty? && description.length <= 1024
+    abort "FAIL #{path} description must be a nonempty string of at most 1024 characters"
+  end
 end
 RUBY
-pass 'SKILL.md YAML frontmatter'
+pass 'SKILL.md YAML frontmatter for both skills'
 
 normalize_command() {
   awk '
@@ -109,6 +115,9 @@ if ! cmp -s "$tmp_dir/claude-command" "$tmp_dir/opencode-command"; then
 fi
 if ! cmp -s commands/burnedout-review.md .opencode/commands/burnedout-review.md; then
   fail 'Claude and OpenCode review commands differ'
+fi
+if ! grep -q 'Load the `burnedout-review` skill' commands/burnedout-review.md; then
+  fail 'review command must load the burnedout-review skill'
 fi
 pass 'normalized command parity'
 

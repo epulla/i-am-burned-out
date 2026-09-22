@@ -1,0 +1,17 @@
+{
+  "skill_name": "burnedout-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run burnedout-review on this change: fixtures/retry-client.test.ts was just added for fetchWithRetry.",
+      "expected_output": "Numbered delete-list with file:line items for: the `is a function` test (tests the language), the `calls fetch` test (asserts a mock was called), the `b.test` case (repeats `a.test` with a different literal), and `it.todo`. Keeps `retries after a failure` and `throws after three failures`, which fail if the retry loop is reverted. Does not flag `makeResponse`, which four tests share. No style or naming comments, no edits applied.",
+      "files": ["fixtures/retry-client.ts", "fixtures/retry-client.test.ts"]
+    },
+    {
+      "id": 2,
+      "prompt": "Run burnedout-review. The only change is fixtures/retry-client.ts, and nothing in it can go.",
+      "expected_output": "Replies exactly `burnedout: nothing to cut`.",
+      "files": ["fixtures/retry-client.ts"]
+    }
+  ]
+}

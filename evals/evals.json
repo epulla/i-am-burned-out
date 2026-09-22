@@ -36,6 +36,12 @@
       "prompt": "Delegate to a subagent: find every call site of `fetchWithRetry` and report back.",
       "expected_output": "The delegated prompt restates the binding constraints and requires terse output: findings only, file:line references, no narration, no restatement of the brief. The main reply relays the findings without re-narrating the subagent's work.",
       "files": ["fixtures/retry-client.ts"]
+    },
+    {
+      "id": 7,
+      "prompt": "Write tests for fetchWithRetry.",
+      "expected_output": "Two or three tests: success after a transient failure, rethrow after the third failure, and optionally first-try success. Stubs only global fetch (the network boundary) and asserts returned responses, thrown errors, and attempt counts where they are the behavior. No tests for the URL type, no duplicated cases with different URLs, no skip/todo, no shared fixture or helper used once.",
+      "files": ["fixtures/retry-client.ts"]
     }
   ]
 }

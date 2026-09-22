@@ -28,6 +28,8 @@ i-am-burned-out puts him inside your coding agent. Terse prose in normal English
 - **Numbered steps, capped at five.** One action per line, nothing hidden by grouping.
 - **Minimum code that works.** A seven-rung ladder: skip it, reuse it, stdlib, native platform feature, installed dependency, one line, then the smallest thing that does the job. No helper called once, no config for one case, no interface with one implementation.
 - **Comments only where the code cannot speak.** No narrating the next statement, no file header describing an obvious module, no commented-out code. One line survives when it explains a constraint, a workaround, or a tradeoff the code cannot show.
+- **Tests that earn their place.** One test per behavior the change adds or fixes, asserting results rather than mock calls. No tests of the language, no copies with different literals, no `todo` stubs. A test stays if reverting the change would break it.
+- **A review skill that returns a delete-list.** `burnedout-review` reads the branch diff and lists what can go, including slop tests, without touching the code.
 - **A safety floor it will not cut.** Input validation at trust boundaries, error handling where data can be lost, auth, secrets, injection defenses, UI accessibility, and a test when the repo has tests.
 - **Builds what you asked for.** If your idea is overkill it says so in one sentence, then builds it anyway.
 - **Scoped tool use.** Locate files before reading bodies, read large files by range, `git diff --stat` before the full diff, native test filters instead of full-suite dumps.
@@ -54,13 +56,17 @@ What the skill changed in that run:
 
 ## The rules
 
-Ten for prose, seven rungs for code. Full text in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md).
+Ten for prose, seven rungs for code, one budget each for comments and tests. Full text in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md).
 
 **Prose:** answer first · numbered steps, max 5 · concise normal English · specifics · flat errors · minimal formatting · say when you do not know · one next step · no filler or narration · a synced todo list for 3+ steps when the host has one.
 
 **Code ladder:** skip → reuse → stdlib → native → installed dep → one line → minimum that works. Read the code first. The ladder is a preference, not a veto: what you ask for gets built. Never cut validation, error handling, security, accessibility, or tests. He has been paged for every one of those.
 
 **Comments:** same weight as code. One line when the code cannot say why, none when it can. A constraint, workaround, or tradeoff stays; narration, obvious file headers, and commented-out code go.
+
+**Tests:** same weight as code. Main path plus each failure branch that matters. Assert observable results; mock only network, clock, and filesystem. A test stays only if reverting the change would make it fail.
+
+**Review:** [skills/burnedout-review/SKILL.md](skills/burnedout-review/SKILL.md) turns the code ladder and the test rule into a numbered `file:line` delete-list for the current branch. It never applies the edits.
 
 **Tools:** scope commands before running them · locate files before reading bodies · inspect summaries before full diffs · use targeted searches and file ranges · preserve test exit status and diagnostics · brief subagents to return findings only, `file:line`, no narration.
 
@@ -83,7 +89,7 @@ Then start Claude Code. Run `/burnedout` to check the level, `/burnedout ultra` 
 npx skills add epulla/i-am-burned-out -a opencode -g -y
 ```
 
-Restart OpenCode, then invoke the skill by name. Optional slash-command and plugin install is in [INSTALL.md](INSTALL.md); the plugin stores valid levels per session, rejects invalid levels, re-injects the active level pointer on each request plus `ultra` rules when selected, and adds the level and a terse-output constraint to subagent prompts.
+Restart OpenCode, then invoke `i-am-burned-out` or `burnedout-review` by name. Optional slash-command and plugin install is in [INSTALL.md](INSTALL.md); the plugin stores valid levels per session, rejects invalid levels, re-injects the active level pointer on each request plus `ultra` rules when selected, and adds the level and a terse-output constraint to subagent prompts.
 
 ### Agent Skills CLI
 

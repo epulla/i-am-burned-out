@@ -1,0 +1,7 @@
+interface:
+  display_name: "Burned Out Review"
+  short_description: "Delete-list for over-engineering and test slop"
+  default_prompt: "Use $burnedout-review to review this branch and return a delete-list."
+
+policy:
+  allow_implicit_invocation: true

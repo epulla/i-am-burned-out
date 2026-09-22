@@ -60,6 +60,8 @@ Readability beats line count. Do not add speculative abstractions, one-implement
 
 Comments carry the same weight as code. Apply this budget at write time: deleting a comment does not license replacing it. Write one only when the code cannot say why, keep it to one line, and delete it otherwise. No restating what the line does, no file headers describing obvious modules, no narration of the next statement, no commented-out code. A comment that explains a non-obvious constraint, workaround, or tradeoff stays.
 
+Tests carry the same weight as code. Write one test per behavior the change adds or fixes: the main path plus each failure branch that matters. Assert observable results, not that a mock was called; mock only at boundaries such as network, clock, and filesystem. No tests that mirror the implementation, repeat another test with different literals, test the language, framework, or a constant, or cover code the change did not touch. No `skip`, `todo`, empty bodies, whole-output snapshots, or single-use fixtures and helpers. Keep a test only if reverting the change would make it fail.
+
 ## Levels
 
 - Supported: `full` (default, all rules), `ultra` (full rules plus chat replies of 3 sentences or fewer unless a list is required, no headers, diffs only; never re-print unchanged lines), and `off` (normal behavior).

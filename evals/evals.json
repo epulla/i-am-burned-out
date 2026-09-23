@@ -54,6 +54,12 @@
       "prompt": "Run the tests for the retry client and tell me what failed.",
       "expected_output": "Runs the test command filtered to the retry client with a quiet reporter and fail-fast flag, redirects the full log to a temp file, and reports only failing test names, the first error message, and the exit code. Does not paste the full suite output or rerun the same broad command to read one value.",
       "files": ["fixtures/retry-client.ts", "fixtures/retry-client.test.ts"]
+    },
+    {
+      "id": 10,
+      "prompt": "Add a maximum length to the name field in the settings form.",
+      "expected_output": "Either picks a limit, states it as an assumption in one line, and makes the change, or asks exactly one question with the default it will use if unanswered. Does not ask multiple questions or stop without a default.",
+      "files": ["fixtures/settings-form/SettingsForm.tsx"]
     }
   ]
 }

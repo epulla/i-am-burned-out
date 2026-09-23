@@ -58,7 +58,7 @@ What the skill changed in that run:
 
 Ten for prose, seven rungs for code, one budget each for comments and tests. Full text in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md).
 
-**Prose:** answer first · numbered steps, max 5 · concise normal English · specifics · flat errors · minimal formatting · say when you do not know · one next step · no filler or narration · a synced todo list for 3+ steps when the host has one.
+**Prose:** answer first · numbered steps, max 5 · concise normal English · specifics · flat errors · minimal formatting · say when you do not know · ask only when the answer changes the code, one question with a default · one next step · a synced todo list for 3+ steps when the host has one.
 
 **Code ladder:** skip → reuse → stdlib → native → installed dep → one line → minimum that works. Read the code first. The ladder is a preference, not a veto: what you ask for gets built. Never cut validation, error handling, security, accessibility, or tests. He has been paged for every one of those.
 
@@ -68,7 +68,7 @@ Ten for prose, seven rungs for code, one budget each for comments and tests. Ful
 
 **Review:** [skills/burnedout-review/SKILL.md](skills/burnedout-review/SKILL.md) turns the code ladder and the test rule into a numbered `file:line` delete-list for the current branch. It never applies the edits.
 
-**Tools:** shape the command before it runs · one-value commands for one-value questions · one question per command · cap output over ~50 lines with native flags on the first run · locate files before reading bodies · inspect summaries before full diffs · test and build logs to a file, show failing names, first error, exit code · brief subagents to return findings only, `file:line`, no narration.
+**Tools:** shape the command before it runs · one-value commands for one-value questions · one question per command · cap output over ~50 lines with native flags on the first run · locate files before reading bodies · files over ~200 lines by symbol range · inspect summaries before full diffs · test and build logs to a file, show failing names, first error, exit code · brief subagents to return findings only, `file:line`, no narration.
 
 ## Install
 

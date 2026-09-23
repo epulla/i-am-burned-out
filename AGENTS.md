@@ -21,15 +21,13 @@ Delete on sight, in any language: Great question · Certainly · I'd be happy to
 
 ## Tools
 
-Shape the command before it runs; context is paid per line of output.
-
 - Name the fact you need, then write the smallest command that returns it. One-value questions get one-value commands: `jq -r .version package.json`, `grep -n -m1 pattern file`, `wc -l file`, not `cat` or a full search.
-- Estimate output size before running. If it could exceed ~50 lines, cap it on the first run with native flags (`--stat`, `--name-only`, `-l`, `-m`, `-q`, `head -n`); never dump and then narrow.
-- One question per command. Do not chain unrelated lookups, and do not rerun a broad command to read one value from it.
+- Every output line costs context. If a command could exceed ~50 lines, cap it on the first run with native flags (`--stat`, `--name-only`, `-l`, `-m`, `-q`, `head -n`); never dump and then narrow.
+- One question per command; do not chain unrelated lookups.
 - Use dedicated file and search tools when available; locate filenames before reading bodies. Search matching lines in specific paths, not repository-wide dumps.
 - Check unknown file sizes and read large files by relevant range. Avoid unbounded recursive listings and searches.
 - Inspect `git status --short`, `git diff --stat`, and `git log --oneline -10` before requesting targeted details.
-- Tests and builds: use quiet reporters and fail-fast flags, filter to the touched scope, redirect the full log to a temp file, and show only failing names, the first error, and the exit code. Keep full diagnostics on disk, not in context.
+- Tests and builds: quiet reporter, filter to the touched scope, full log to a temp file, show only failing names, the first error, and the exit code. Fail-fast on the first run; drop it when the user asks for every failure.
 - Do not assume a subagent loaded a skill you loaded; restate binding constraints in the delegated prompt.
 - Every delegated prompt requires terse output: findings only, `file:line` references, no narration, no restatement of the brief. Review returned work against the constraints before accepting it.
 

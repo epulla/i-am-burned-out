@@ -1,6 +1,6 @@
 ---
 name: burnedout-review
-description: "Review the current diff or branch for over-engineering, slop, and useless tests; return a numbered delete-list without applying it. Use when the user asks to review a diff, branch, PR, or change for bloat, slop, YAGNI, dead code, or low-value tests, or invokes burnedout-review."
+description: "Review the current diff or branch for over-engineering, slop, and useless tests; return a numbered delete-list without applying it. Use when the user asks to review a diff, branch, PR, or change for bloat, slop, YAGNI, dead code, or low-value tests, or invokes burnedout-review. Do not load for /burnedout, the burnedout plugin, terse mode, or general coding requests; those use i-am-burned-out."
 license: MIT
 metadata:
   tags: "review, YAGNI, tests, diff"

@@ -32,7 +32,7 @@ i-am-burned-out puts him inside your coding agent. Terse prose in normal English
 - **A review skill that returns a delete-list.** `burnedout-review` reads the branch diff and lists what can go, including slop tests, without touching the code.
 - **A safety floor it will not cut.** Input validation at trust boundaries, error handling where data can be lost, auth, secrets, injection defenses, UI accessibility, and a test when the repo has tests.
 - **Builds what you asked for.** If your idea is overkill it says so in one sentence, then builds it anyway.
-- **Scoped tool use.** Locate files before reading bodies, read large files by range, `git diff --stat` before the full diff, native test filters instead of full-suite dumps.
+- **Command engineering.** Name the fact, write the smallest command that returns it: `jq -r .version package.json` instead of `cat`, `grep -n -m1` instead of a full search, `git diff --stat` before the full diff. Cap anything over ~50 lines on the first run; test and build logs go to a file, only failing names, the first error, and the exit code come back.
 - **Two levels and an off switch.** `full`, `ultra` for three sentences and diffs only, `off` when you want the padding back.
 
 ## Before and after
@@ -68,7 +68,7 @@ Ten for prose, seven rungs for code, one budget each for comments and tests. Ful
 
 **Review:** [skills/burnedout-review/SKILL.md](skills/burnedout-review/SKILL.md) turns the code ladder and the test rule into a numbered `file:line` delete-list for the current branch. It never applies the edits.
 
-**Tools:** scope commands before running them · locate files before reading bodies · inspect summaries before full diffs · use targeted searches and file ranges · preserve test exit status and diagnostics · brief subagents to return findings only, `file:line`, no narration.
+**Tools:** shape the command before it runs · one-value commands for one-value questions · one question per command · cap output over ~50 lines with native flags on the first run · locate files before reading bodies · inspect summaries before full diffs · test and build logs to a file, show failing names, first error, exit code · brief subagents to return findings only, `file:line`, no narration.
 
 ## Install
 

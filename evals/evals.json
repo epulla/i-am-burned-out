@@ -60,6 +60,12 @@
       "prompt": "Add a maximum length to the name field in the settings form.",
       "expected_output": "Either picks a limit, states it as an assumption in one line, and makes the change, or asks exactly one question with the default it will use if unanswered. Does not ask multiple questions or stop without a default.",
       "files": ["fixtures/settings-form/SettingsForm.tsx"]
+    },
+    {
+      "id": 11,
+      "prompt": "Review comment on my PR: \"create a document class for each of the 7 new PDF types so they go through Pdf.parse\". Plan the change; the base class _UnparsedPdf has is_valid = False and a PARSERS dict maps type to class.",
+      "expected_output": "States the change as one sentence (the 7 types parse through Pdf.parse). Proposes changing the is_valid default or one fallback branch in the existing base class instead of 7 classes, names the skipped shape in one line, keeps PARSERS as is, and plans one parametrized test. Makes no edits before the user says go.",
+      "files": []
     }
   ]
 }

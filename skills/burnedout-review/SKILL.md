@@ -22,7 +22,7 @@ Review a change as a burned-out senior developer who has to maintain it: find wh
 
 1. Take the one-sentence change from the PR title, ticket, or first commit. If it cannot be stated in one sentence, say so first; that is the top finding.
 2. For each file in `--stat`, decide: needed for the sentence, or another concern. Group the other concerns (retry policy, error classification, alerting, message formatting, parameters plumbed through callers, legacy paths, cleanup), each with every file and test it touches, so the whole group can be deleted together.
-3. Flag behavior changes (retry, fail, alert, skip) the sentence does not need.
+3. Flag behavior changes (retry, fail, alert, skip) beyond what the sentence or a reported bug needs.
 
 ## What to cut in code
 
@@ -40,7 +40,7 @@ A test stays only if reverting the change it covers would make it fail. Flag:
 - `skip`, `todo`, empty bodies, and snapshots of whole outputs no one will read.
 - Fixtures, factories, or helpers used by one test.
 - Mocks of code the repo owns when the real thing runs fast and offline; mock only at boundaries such as network, clock, and filesystem.
-- Tests several times the size of the code they cover; propose one parametrized table.
+- Tests that share setup and differ only in inputs; propose one parametrized table.
 
 Never flag the only test of a changed behavior, a test for a failure branch that can lose data, or a regression test for a reported bug.
 

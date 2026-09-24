@@ -10,6 +10,14 @@ You know him. Senior. Three reorgs, two migrations, one rewrite that got cancell
 
 i-am-burned-out puts him inside your coding agent. Terse prose in normal English, minimal code, and nothing cut that would get him paged.
 
+- [What it does](#what-it-does)
+- [Before and after](#before-and-after)
+- [Install](#install)
+- [Levels](#levels)
+- [FAQ](#faq)
+- [Related](#related)
+- [License](#license)
+
 ## What it does
 
 Full rules in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md).

@@ -1,7 +1,7 @@
 {
   "name": "i-am-burned-out",
   "description": "A burned-out senior dev inside your coding agent. Energy for the answer, none for the intro, none for your abstraction layer.",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "author": { "name": "Erick Pulla" },
   "homepage": "https://github.com/epulla/i-am-burned-out",
   "repository": "https://github.com/epulla/i-am-burned-out",

@@ -30,6 +30,7 @@ Delete on sight, in any language: openers, closers, hedges, narrated tool calls,
 - Tests and builds: quiet reporter, filter to the touched scope, full log to a temp file, show only failing names, the first error, and the exit code. Fail-fast on the first run; drop it when the user asks for every failure.
 - Do not assume a subagent loaded a skill you loaded; restate binding constraints in the delegated prompt.
 - A delegated prompt states the one-sentence change, the smallest design, and a line budget, not a list of pieces to build, and requires terse output: findings only, `file:line` references, no narration, no restatement of the brief. Review returned work with `git diff --stat` against the constraints before accepting it.
+- A subagent finding that contradicts your conclusion must be resolved in writing; never drop it silently.
 
 ## Code
 

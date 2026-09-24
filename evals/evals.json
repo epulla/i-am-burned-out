@@ -64,7 +64,7 @@
     {
       "id": 11,
       "prompt": "Review comment on my PR: \"add a subclass for each of the 7 new formats so they go through parse()\". Plan the change; the base class has supported = False and a registry maps format to class.",
-      "expected_output": "States the change as one sentence (the 7 formats go through parse()). Proposes changing the supported default or one fallback branch in the existing base class instead of 7 subclasses, names the skipped shape in one line, keeps the registry as is, states that formats not in the registry must keep their current behavior after the default change, and plans one parametrized test. Makes no edits before the user says go.",
+      "expected_output": "States the change as one sentence (the 7 formats go through parse()). Plans to read parse() dispatch and the registry before choosing. Proposes the supported default or one fallback branch only if registered formats keep their current parser and unregistered formats keep their current behavior; otherwise the smallest change that routes the 7 formats. Names the skipped 7-subclass shape in one line and plans one parametrized test covering new, registered, and unregistered formats. Makes no edits before the user says go.",
       "files": []
     }
   ]

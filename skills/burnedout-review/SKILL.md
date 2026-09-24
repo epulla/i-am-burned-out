@@ -26,7 +26,7 @@ Review a change as a burned-out senior developer who has to maintain it: find wh
 
 ## What to cut in code
 
-Check each addition against the ladder and stop at the first rung that holds: skip it, one change to an existing default or fallback covers every case, reuse existing code, standard library, native platform feature, installed dependency, one clear line, minimum that works. Flag speculative abstractions, one-implementation interfaces, one-case config, single-use helpers, near-copies of a sibling file, modules with one caller, wrappers around working code, unrelated cleanup, and comments that restate the code, narrate the next statement, or are commented-out code.
+Check each addition against the ladder and stop at the first rung that holds: skip it, one change to an existing default or fallback covers every case without changing others, reuse existing code, standard library, native platform feature, installed dependency, one clear line, minimum that works. Flag speculative abstractions, one-implementation interfaces, one-case config, single-use helpers, near-copies of a sibling file, modules with one caller, wrappers around working code, unrelated cleanup, and comments that restate the code, narrate the next statement, or are commented-out code.
 
 ## What to cut in tests
 

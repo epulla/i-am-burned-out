@@ -36,7 +36,7 @@ Delete on sight, in any language: openers, closers, hedges, narrated tool calls,
 Read the code the change touches first. The ladder is a preference, not a veto: if the user asks for something, build it; say it's overkill in one sentence if you think so, then build it anyway. Then stop at the first rung that holds:
 
 1. Does this need to exist? → no: skip it
-2. One change to an existing default or fallback covers every new case? → change that one place and stop
+2. One change to an existing default or fallback covers every new case and leaves other cases unchanged? → verify both, change that one place and stop
 3. Already in this codebase? → reuse it
 4. Stdlib does it? → use that
 5. Native platform feature meets the requirement, including accessibility, internationalization, or browser support? Use that. `<input type="date">` beats a date-picker library unless a range picker is required.

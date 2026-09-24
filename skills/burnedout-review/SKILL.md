@@ -17,14 +17,14 @@ Review a change as a burned-out senior developer who has to maintain it: find wh
 2. With a base, run `git status --short` and `git diff <base> --stat`. The single-ref form diffs the base against the working tree, so one pass covers committed, staged, and unstaged changes. Inspect files with `git diff <base> -- <file>`.
 3. If none resolve, because the repository has no remote, no `origin/HEAD`, a detached HEAD, or no commit yet, review the working tree alone: `git status --short`, `git diff --cached --stat`, and `git diff --stat`, inspecting files with `git diff --cached -- <file>` and `git diff -- <file>`.
 4. Read relevant untracked files separately. Read `--stat` first and diff only the files that matter; never dump the whole diff at once.
-5. If the user names files or directories instead of a change, or the directory is not a git repository, review those files whole and skip "What to cut in scope".
+5. If the user names files or directories instead of a change, or the directory is not a git repository, review those files whole and skip "What to cut in scope". In that mode, a test stays if breaking the behavior it covers would make it fail; skip the diff-only test rule and the size lines.
 
 ## What to cut in scope
 
 1. Take the one-sentence change from the PR title, ticket, first commit, or the user's request; if none states it, infer it from the diff and mark it as an assumption. If it cannot be stated in one sentence, say so first; that is the top finding.
 2. For each file in `--stat`, decide: needed for the sentence, or another concern. Group the other concerns (retry policy, error classification, alerting, message formatting, parameters plumbed through callers, legacy paths, cleanup), each with every file and test it touches, so the whole group can be deleted together.
 3. Flag behavior changes (retry, fail, alert, skip) beyond what the sentence or a reported bug needs.
-4. If the PR description or ticket lists items (rules, types, endpoints), check each against the diff; a listed item missing from the diff is the top finding.
+4. If the PR description or ticket lists items (rules, types, endpoints), check each against the resulting code; an item neither implemented nor marked as rejected is the top finding.
 
 ## What to cut in code
 
@@ -50,6 +50,6 @@ A conditionally skipped test (`skipif`, `skipUnless`, env or binary checks) does
 
 ## Output
 
-If nothing qualifies, reply exactly `burnedout: nothing to cut`. Otherwise: first line `current: N files +A/-D`, then scope groups one per line: `concern — files and tests — one-line follow-up`, then a numbered delete-list, one item per line: `file:line — what to remove — rung or test rule that replaces it`, then the estimated in-scope size, then `not covered: correctness review`. Include only removals and simplifications that keep trust-boundary validation, data-loss error handling, auth and injection defenses, accessibility, and at least one test per changed behavior.
+If nothing qualifies and nothing is flagged, reply exactly `burnedout: nothing to cut`. Otherwise: first line `current: N files +A/-D`, then findings that are not removals (missing listed items, conditionally skipped tests) one per line: `flag: file:line — issue`, then scope groups one per line: `concern — files and tests — one-line follow-up`, then a numbered delete-list, one item per line: `file:line — what to remove — rung or test rule that replaces it`, then the estimated in-scope size, then `not covered: correctness review`. Include only removals and simplifications that keep trust-boundary validation, data-loss error handling, auth and injection defenses, accessibility, and at least one test per changed behavior.
 
 Do not apply the changes. Do not comment on style, naming, or formatting.

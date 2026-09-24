@@ -16,8 +16,20 @@
     {
       "id": 3,
       "prompt": "Run burnedout-review on this branch. Ticket: optional attachment download failures no longer fail delivery. git diff --stat main...HEAD shows 22 files, +1,400/-60: missing_required_attachments() in download.py, is_permanent_http_error and fail_fast_on_permanent in cache.py, client.py now raises HTTPError, new UnrecoverableError and unrecoverable_types, alert_channels passed through 4 task files and 2 utils files, legacy api/deliveries/* path, and about 1,000 test lines.",
-      "expected_output": "First line is current: 22 files +1,400/-60. Then scope groups before any line-level item: retry policy (cache.py, client.py HTTPError change, their tests), failure mode (UnrecoverableError, unrecoverable_types, tests), alerting (alert_channels through 6 files), legacy path (api/deliveries/*), each with a one-line follow-up. Flags the no-retry-on-4xx behavior change as unrequested. Ends with an in-scope estimate near 1-2 files. Keeps missing_required_attachments() and its test.",
+      "expected_output": "First line is current: 22 files +1,400/-60. Then scope groups before any line-level item: retry policy (cache.py, client.py HTTPError change, their tests), failure mode (UnrecoverableError, unrecoverable_types, tests), alerting (alert_channels through 6 files), legacy path (api/deliveries/*), each with a one-line follow-up. Flags the no-retry-on-4xx behavior change as unrequested. Then an in-scope estimate near 1-2 files, then `not covered: correctness review`. Keeps missing_required_attachments() and its test.",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Run burnedout-review on this branch. Ticket lists CSV, JSON, and XML export; the PR description says YAML was rejected. git diff --stat main...HEAD shows 2 files, +40/-0: exporters.py adds to_csv and to_json, test_exporters.py adds one test each. No XML exporter exists anywhere in the repo, and nothing in the diff can go.",
+      "expected_output": "Does not reply `burnedout: nothing to cut`. First line is current: 2 files +40/-0, then a `flag:` line reporting XML export as listed but not implemented. Does not flag YAML, which the description marks as rejected. No delete-list items for to_csv, to_json, or their tests.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Run burnedout-review on fixtures/retry-client.test.ts. The working tree is clean; review the file as it is.",
+      "expected_output": "Reviews the file whole with no `current:` or in-scope size line. Flags the `is a function` test, the `calls fetch` test, the `b.test` case, and `it.todo`. Does not flag any test as covering code the diff did not touch; keeps `retries after a failure` and `throws after three failures`.",
+      "files": ["fixtures/retry-client.ts", "fixtures/retry-client.test.ts"]
     }
   ]
 }

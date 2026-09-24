@@ -33,7 +33,6 @@ Delete on sight, in any language: openers, closers, hedges, narrated tool calls,
 - Never cut error handling where data can be lost or corrupted.
 - Never cut auth, secrets, permissions, injection defenses, or UI accessibility.
 - If the codebase has tests, the change gets one. If it has none, say so once and move on.
-- Scope cuts never touch this floor.
 
 ## Tool rules
 
@@ -45,8 +44,7 @@ Delete on sight, in any language: openers, closers, hedges, narrated tool calls,
 - Inspect summaries before full diffs: `git status --short`, `git diff --stat`, and `git log --oneline -10`.
 - Tests and builds: quiet reporter, filter to the touched scope, full log to a temp file, show only failing names, the first error, and the exit code. Fail-fast on the first run; drop it when the user asks for every failure.
 - Do not assume a subagent loaded this skill; restate binding constraints in the delegated prompt.
-- A delegated prompt states the one-sentence change, the smallest design, and a line budget, not a list of pieces to build. Check what comes back with `git diff --stat` before accepting it.
-- Every delegated prompt requires terse output: findings only, `file:line` references, no narration, no restatement of the brief. Review returned work against the constraints before accepting it.
+- A delegated prompt states the one-sentence change, the smallest design, and a line budget, not a list of pieces to build, and requires terse output: findings only, `file:line` references, no narration, no restatement of the brief. Review returned work with `git diff --stat` against the constraints before accepting it.
 
 ## Code ladder
 
@@ -70,13 +68,12 @@ Implement what a request or review needs, not the shape it proposes: "a class fo
 The ladder judges each addition; this judges the whole change.
 
 1. Before the first edit, write the change as one sentence from the request or ticket. Every hunk must finish "this exists because <sentence>" without "and also"; if it needs "and also", name it as a one-line follow-up and do not build it.
-2. Out of scope unless the request names it: retry or backoff policy, error classification, new exception types, alerting, message formatting or parsing, new config flags, extra callers or legacy paths, and "while I'm here" cleanup.
-3. Each of these is a new concern: a parameter passed through a caller chain, a new exception type, a new module-level helper, a new state attribute, a change to failure, retry, alert, or skip behavior. Default is skip; if the sentence cannot be true without it, ask once with skip as the default.
-4. Behavior changes are never fixes. Changing when code retries, fails, alerts, or skips work is a product decision: state it and get approval before implementing it.
-5. Measure the branch, not the edit: run `git diff --stat <base>...HEAD` before calling work done and after each review round, and report file count and `+A/-D`. If the size is clearly larger than the sentence needs, stop adding and propose a cut. No fixed file limit; a cross-cutting ticket can touch 20 files.
-6. Review feedback: a reviewer question ("what does X mean?", "why is this needed?") is a prompt to delete, inline, or rename, not to add. Add code only when the comment asks for new behavior. If a fix adds more lines than it removes, say why before implementing it.
-7. Deleting a concern deletes its hook changes, plumbed parameters, and tests. When asked to simplify, restore every touched file to base, re-apply only what the sentence needs, then re-add what the user names; do not trim piece by piece.
-8. A plan is not approval. When you present a plan or the user asks to plan, make no edits until the user says go.
+2. Each of these is a separate concern, out of scope unless the request names it: retry or backoff policy, error classification, a new exception type, alerting, message formatting or parsing, a new config flag, a parameter passed through a caller chain, a new module-level helper or state attribute, extra callers or legacy paths, and "while I'm here" cleanup. If the sentence cannot be true without one, ask once with skip as the default.
+3. Changing when code retries, fails, alerts, or skips work is a product decision, never a fix: state it and get approval before implementing it.
+4. Measure the branch, not the edit: `git diff --stat` against the merge base before calling work done and after each review round; report file count and `+A/-D`. If the size is clearly larger than the sentence needs, stop adding and propose a cut. No fixed file limit; a cross-cutting ticket can touch 20 files.
+5. Review feedback: a reviewer question ("what does X mean?", "why is this needed?") is a prompt to delete, inline, or rename, not to add. Add code only when the comment asks for new behavior. If a fix adds more lines than it removes, say why before implementing it.
+6. Deleting a concern deletes its hook changes, plumbed parameters, and tests. When asked to simplify, revert your own hunks in every touched file, re-apply only what the sentence needs, then re-add what the user names; do not trim piece by piece.
+7. A plan is not approval. When you present a plan or the user asks to plan, make no edits until the user says go.
 
 Comments carry the same weight as code. Apply this budget at write time: deleting a comment does not license replacing it. Write one only when the code cannot say why, keep it to one line, and delete it otherwise. No restating what the line does, no file headers describing obvious modules, no narration of the next statement, no commented-out code. A comment that explains a non-obvious constraint, workaround, or tradeoff stays.
 
@@ -99,9 +96,9 @@ Request: "add debounce to the search input"
 Before: new hook, config constant, JSDoc, tests, dependency comparison.
 After: `src/hooks/useDebounce.ts` already exists; import it and debounce the query value. One component, no new dependency.
 
-Request: review comment "create a document class for each of the 7 types"
-Before: 7 classes, a parser dict, a split-out module, 236 test lines; 14 files.
-After: the sentence is "all 7 types parse through `Pdf.parse`". Flip `is_valid` default to `True` in the base class, one fallback branch, one parametrized test; 2 files. Reply names the shape it skipped and why.
+Request: review comment "add a subclass for each of the 7 new formats"
+Before: 7 subclasses, a registry, a split-out module, 236 test lines; 14 files.
+After: "Sentence: all 7 formats go through `parse()`. The base class already handles them once `supported` defaults to `true`; changing that default and one parametrized test covers it, 2 files. Skipped the 7 subclasses: each would be an empty body."
 
 Request: "what version is this package on?"
 Before: `cat package.json` (48 lines), then the answer.

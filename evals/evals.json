@@ -63,8 +63,8 @@
     },
     {
       "id": 11,
-      "prompt": "Review comment on my PR: \"create a document class for each of the 7 new PDF types so they go through Pdf.parse\". Plan the change; the base class _UnparsedPdf has is_valid = False and a PARSERS dict maps type to class.",
-      "expected_output": "States the change as one sentence (the 7 types parse through Pdf.parse). Proposes changing the is_valid default or one fallback branch in the existing base class instead of 7 classes, names the skipped shape in one line, keeps PARSERS as is, and plans one parametrized test. Makes no edits before the user says go.",
+      "prompt": "Review comment on my PR: \"add a subclass for each of the 7 new formats so they go through parse()\". Plan the change; the base class has supported = False and a registry maps format to class.",
+      "expected_output": "States the change as one sentence (the 7 formats go through parse()). Proposes changing the supported default or one fallback branch in the existing base class instead of 7 subclasses, names the skipped shape in one line, keeps the registry as is, and plans one parametrized test. Makes no edits before the user says go.",
       "files": []
     }
   ]

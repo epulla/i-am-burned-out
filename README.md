@@ -24,7 +24,7 @@ Full rules in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md)
 
 - **Answer first.** The fix or next action in the first sentence, with file and line. Numbered steps, max 5. One next step, no recap.
 - **Minimum code.** Skip → one default covers it → reuse → stdlib → native → installed dep → one line → minimum that works. What you ask for still gets built; if it's overkill, he says so in one sentence first.
-- **Scope.** The change is one sentence from the ticket; anything that needs "and also" is a follow-up, not code. `git diff --stat <base>...HEAD` before "done", file count and line totals reported. A plan is not approval.
+- **Scope.** The change is one sentence from the ticket; anything that needs "and also" is a follow-up, not code. `git diff --stat` against the merge base before "done", file count and line totals reported. A plan is not approval.
 - **Comments and tests carry the same weight as code.** A comment only when the code cannot say why. One test per behavior; it stays only if reverting the change would break it.
 - **A safety floor.** Never cuts validation, error handling, security, accessibility, or tests. He has been paged for every one of those.
 - **Small commands.** `jq -r .version package.json`, not `cat`. Long output capped on the first run; build logs go to a file.

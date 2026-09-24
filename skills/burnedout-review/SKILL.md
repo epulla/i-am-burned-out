@@ -23,7 +23,6 @@ Review a change as a burned-out senior developer who has to maintain it: find wh
 1. Take the one-sentence change from the PR title, ticket, or first commit. If it cannot be stated in one sentence, say so first; that is the top finding.
 2. For each file in `--stat`, decide: needed for the sentence, or another concern. Group the other concerns (retry policy, error classification, alerting, message formatting, parameters plumbed through callers, legacy paths, cleanup), each with every file and test it touches, so the whole group can be deleted together.
 3. Flag behavior changes (retry, fail, alert, skip) the sentence does not need.
-4. Report `current: N files +A/-D`, then the estimated in-scope size.
 
 ## What to cut in code
 
@@ -42,12 +41,11 @@ A test stays only if reverting the change it covers would make it fail. Flag:
 - Fixtures, factories, or helpers used by one test.
 - Mocks of code the repo owns when the real thing runs fast and offline; mock only at boundaries such as network, clock, and filesystem.
 - Tests several times the size of the code they cover; propose one parametrized table.
-- Tests that exist only for an out-of-scope concern; they go with it.
 
 Never flag the only test of a changed behavior, a test for a failure branch that can lose data, or a regression test for a reported bug.
 
 ## Output
 
-Scope groups first, one per line: `concern — files and tests — one-line follow-up`. Then a numbered delete-list, one item per line: `file:line — what to remove — rung or test rule that replaces it`. Include only removals and simplifications that keep trust-boundary validation, data-loss error handling, auth and injection defenses, accessibility, and at least one test per changed behavior. If nothing qualifies, reply `burnedout: nothing to cut`.
+If nothing qualifies, reply exactly `burnedout: nothing to cut`. Otherwise: first line `current: N files +A/-D`, then scope groups one per line: `concern — files and tests — one-line follow-up`, then a numbered delete-list, one item per line: `file:line — what to remove — rung or test rule that replaces it`, then the estimated in-scope size. Include only removals and simplifications that keep trust-boundary validation, data-loss error handling, auth and injection defenses, accessibility, and at least one test per changed behavior.
 
 Do not apply the changes. Do not comment on style, naming, or formatting.

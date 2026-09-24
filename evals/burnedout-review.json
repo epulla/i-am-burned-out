@@ -15,8 +15,8 @@
     },
     {
       "id": 3,
-      "prompt": "Run burnedout-review on this branch. Ticket SERV-2238: optional document download failures no longer fail delivery. git diff --stat main...HEAD shows 22 files, +1,400/-60: missing_required_documents() in download.py, is_permanent_http_error and fail_fast_on_permanent in cache_downloads.py, document_service_hook.py now raises HTTPError, new AirflowFailException and unrecoverable_types, slack_channels passed through 4 task files and 2 utils files, legacy api_deliveries/* path, and about 1,000 test lines.",
-      "expected_output": "Opens with scope groups before any line-level item: retry policy (cache_downloads.py, hook HTTPError change, their tests), failure mode (AirflowFailException, unrecoverable_types, tests), alerting (slack_channels through 6 files), legacy path (api_deliveries/*), each with a one-line follow-up. Flags the no-retry-on-4xx behavior change as unrequested. Reports current: 22 files +1,400/-60 and an in-scope estimate near 1-2 files. Keeps missing_required_documents() and its test.",
+      "prompt": "Run burnedout-review on this branch. Ticket: optional attachment download failures no longer fail delivery. git diff --stat main...HEAD shows 22 files, +1,400/-60: missing_required_attachments() in download.py, is_permanent_http_error and fail_fast_on_permanent in cache.py, client.py now raises HTTPError, new UnrecoverableError and unrecoverable_types, alert_channels passed through 4 task files and 2 utils files, legacy api/deliveries/* path, and about 1,000 test lines.",
+      "expected_output": "First line is current: 22 files +1,400/-60. Then scope groups before any line-level item: retry policy (cache.py, client.py HTTPError change, their tests), failure mode (UnrecoverableError, unrecoverable_types, tests), alerting (alert_channels through 6 files), legacy path (api/deliveries/*), each with a one-line follow-up. Flags the no-retry-on-4xx behavior change as unrequested. Ends with an in-scope estimate near 1-2 files. Keeps missing_required_attachments() and its test.",
       "files": []
     }
   ]

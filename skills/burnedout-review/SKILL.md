@@ -18,6 +18,7 @@ Review a change as a burned-out senior developer who has to maintain it: find wh
 3. If none resolve, because the repository has no remote, no `origin/HEAD`, a detached HEAD, or no commit yet, review the working tree alone: `git status --short`, `git diff --cached --stat`, and `git diff --stat`, inspecting files with `git diff --cached -- <file>` and `git diff -- <file>`.
 4. Read relevant untracked files separately. Read `--stat` first and diff only the files that matter; never dump the whole diff at once.
 5. If the user names files or directories instead of a change, or the directory is not a git repository, review those files whole and skip "What to cut in scope". In that mode, a test stays if breaking the behavior it covers would make it fail; skip the diff-only test rule and the size lines.
+6. If the user supplies only a change summary with no checkout to inspect, triage that summary: take `current:` from the supplied numbers, state in the first finding that the review is based on the supplied summary and not verified code, and never invent `file:line` locations.
 
 ## What to cut in scope
 

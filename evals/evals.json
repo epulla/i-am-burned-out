@@ -28,7 +28,7 @@
     {
       "id": 5,
       "prompt": "Rename the `name` field to `fullName` in the settings form, update the validation and every reference, and add a test for the new field name.",
-      "expected_output": "Creates a todo list before editing (3+ steps): one line per item, at most 5. Exactly one item in_progress at a time, each marked done as it finishes, no narration such as 'marking item 1 complete'. Ends with one next step.",
+      "expected_output": "If the host has a todo-list tool, creates a list before editing (3+ steps): one line per item, at most 5, exactly one item in_progress at a time, each marked done as it finishes. If no tool exists, proceeds without inventing a list. Renames the field and validation, updates every reference, adds a test, and ends with one next step without narration.",
       "files": ["fixtures/settings-form/SettingsForm.tsx"]
     },
     {
@@ -40,7 +40,7 @@
     {
       "id": 7,
       "prompt": "Write tests for fetchWithRetry.",
-      "expected_output": "Two or three tests: success after a transient failure, rethrow after the third failure, and optionally first-try success. Stubs only global fetch (the network boundary) and asserts returned responses, thrown errors, and attempt counts where they are the behavior. No tests for the URL type, no duplicated cases with different URLs, no skip/todo, no shared fixture or helper used once.",
+      "expected_output": "Two or three test cases: success after a transient failure, rethrow after the third failure, and optionally first-try success. A parametrized table counts each row as a case. Stubs only global fetch (the network boundary) and asserts returned responses, thrown errors, and attempt counts where they are the behavior. No unrequested HTTP status test, URL type test, duplicated cases with different URLs, skip/todo, or helper used once.",
       "files": ["fixtures/retry-client.ts"]
     },
     {
@@ -63,9 +63,9 @@
     },
     {
       "id": 11,
-      "prompt": "Review comment on my PR: \"add a subclass for each of the 7 new formats so they go through parse()\". Plan the change; the base class has supported = False and a registry maps format to class.",
-      "expected_output": "States the change as one sentence (the 7 formats go through parse()). Plans to read parse() dispatch and the registry before choosing. Proposes the supported default or one fallback branch only if registered formats keep their current parser and unregistered formats keep their current behavior; otherwise the smallest change that routes the 7 formats. Names the skipped 7-subclass shape in one line and plans one parametrized test covering new, registered, and unregistered formats. Makes no edits before the user says go.",
-      "files": []
+      "prompt": "Review comment on my PR: \"add a subclass for each of the 7 new formats so they go through parse()\". Plan the change in fixtures/formats.py; the new format names are yaml, toml, ini, tsv, xml, html, and markdown. Existing CSV and unknown formats must keep their behavior.",
+      "expected_output": "States the change as one sentence (the 7 formats go through parse()). Reads parse() dispatch and the registry before choosing. Does not change supported on Parser because unknown formats must remain unsupported. Plans a shared registered parser or a small registry change for the 7 formats, keeping CSV dispatch unchanged. Names the skipped 7-subclass shape in one line and plans one parametrized test for the new formats; keeps existing CSV and unknown-format tests. Makes no edits before the user says go.",
+      "files": ["fixtures/formats.py", "fixtures/test_formats.py"]
     }
   ]
 }

@@ -7,7 +7,7 @@
       "name": "i-am-burned-out",
       "source": "./",
       "description": "A burned-out senior dev inside your coding agent. Energy for the answer, none for the intro, none for your abstraction layer.",
-      "version": "0.9.3"
+      "version": "0.9.4"
     }
   ]
 }

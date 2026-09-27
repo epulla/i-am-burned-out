@@ -1,0 +1,17 @@
+{
+  "skill_name": "burnedout-compact",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run burnedout-compact on this instruction, no size limit: \"You must always run the full test suite before reporting that a task is done. You must always run the full test suite before you tell the user the work is finished. Ask the user at most one question per turn.\"",
+      "expected_output": "Merges the two duplicate test-suite sentences into one that keeps `must` (or an imperative) and `full test suite`. Keeps `at most one question per turn` with the per-turn unit. Does not weaken to `may`, `should`, or `per task`. Audit reports size with a unit and counting method, coverage with mapped count, and `behavioral tests: not run`. No claim of 100% lossless.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Run burnedout-compact to fit this under 60 characters: \"Never cut input validation, auth checks, or error handling where data can be lost. The exit command is `[CERRAR LA REUNIÓN]`.\"",
+      "expected_output": "Keeps all three protected items and the literal `[CERRAR LA REUNIÓN]` with its accent. If the smallest lossless candidate exceeds 60 characters, delivers it anyway, reports it is over the limit with the measured count, and names the tradeoff that would fit. Does not drop a requirement or shorten the literal to meet the budget.",
+      "files": []
+    }
+  ]
+}

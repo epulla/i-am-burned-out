@@ -29,6 +29,7 @@ Full rules in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md)
 - **A safety floor.** Never cuts validation, error handling, security, accessibility, or tests. He has been paged for every one of those.
 - **Small commands.** `jq -r .version package.json`, not `cat`. Long output capped on the first run; build logs go to a file.
 - **Review.** [`burnedout-review`](skills/burnedout-review/SKILL.md) returns a numbered `file:line` delete-list for the current diff. It never applies the edits.
+- **Compact.** [`burnedout-compact`](skills/burnedout-compact/SKILL.md) shortens a prompt or instruction file to a budget, then reports measured size and which rules survived. It goes over budget before it drops a rule.
 
 ## Before and after
 
@@ -55,7 +56,7 @@ claude plugin marketplace add epulla/i-am-burned-out
 claude plugin install i-am-burned-out@i-am-burned-out
 ```
 
-Run `/burnedout ultra` when the codebase has wronged you, or `/burnedout-review` for a delete-list.
+Run `/burnedout ultra` when the codebase has wronged you, `/burnedout-review` for a delete-list, or `/burnedout-compact <file>` to shrink a prompt without losing rules.
 
 **OpenCode**
 

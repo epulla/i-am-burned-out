@@ -1,0 +1,7 @@
+interface:
+  display_name: "Burned Out Compact"
+  short_description: "Compress instructions without losing rules"
+  default_prompt: "Use $burnedout-compact to shorten this prompt without changing its requirements."
+
+policy:
+  allow_implicit_invocation: true

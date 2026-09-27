@@ -11,6 +11,8 @@ const ULTRA =
   "burnedout level ultra: keep chat replies to 3 sentences or fewer unless a list is required, no headers, diffs only, never re-print unchanged lines."
 const SUBAGENT =
   "burnedout: reply with findings only, file:line references, no narration, no restatement of the brief."
+const COMPACT =
+  "burnedout compaction: keep the goal, decisions with their reason, user constraints and preferences, files touched and their state, exact paths, commands, and error text, failed approaches (one line each: tried X, failed: Y), open questions, and the one next step. Drop tool-output dumps, narration, and resolved detours. Never invent progress."
 
 const isLevel = (value: string): value is Level => (LEVELS as readonly string[]).includes(value)
 
@@ -54,6 +56,16 @@ export default (async () => ({
       if (!level || level === "off") return
       if (!output.system.includes(POINTER)) output.system.push(POINTER)
       if (level === "ultra" && !output.system.includes(ULTRA)) output.system.push(ULTRA)
+    } catch {
+      return
+    }
+  },
+
+  "experimental.session.compacting": async (input, output) => {
+    try {
+      const level = bySession.get(input.sessionID)
+      if (!level || level === "off") return
+      if (!output.context.includes(COMPACT)) output.context.push(COMPACT)
     } catch {
       return
     }

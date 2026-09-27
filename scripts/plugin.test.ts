@@ -8,11 +8,14 @@ const ULTRA =
   "burnedout level ultra: keep chat replies to 3 sentences or fewer unless a list is required, no headers, diffs only, never re-print unchanged lines."
 const SUBAGENT =
   "burnedout: reply with findings only, file:line references, no narration, no restatement of the brief."
+const COMPACT =
+  "burnedout compaction: keep the goal, decisions with their reason, user constraints and preferences, files touched and their state, exact paths, commands, and error text, failed approaches (one line each: tried X, failed: Y), open questions, and the one next step. Drop tool-output dumps, narration, and resolved detours. Never invent progress."
 
 const hooks = await plugin()
 const commandBefore = hooks["command.execute.before"]
 const systemTransform = hooks["experimental.chat.system.transform"]
 const toolBefore = hooks["tool.execute.before"]
+const compacting = hooks["experimental.session.compacting"]
 const duplicate = await plugin()
 
 function textPart(sessionID: string, text = RENDERED_COMMAND) {
@@ -160,6 +163,27 @@ test("inactive sessions do not inject a pointer", async () => {
   const system: string[] = []
   await systemTransform({ sessionID: "plugin-test-inactive" }, { system })
   assert.deepEqual(system, [])
+})
+
+test("compaction appends rules once only for active levels", async () => {
+  for (const [level, expected] of [
+    ["full", [COMPACT]],
+    ["ultra", [COMPACT]],
+    ["off", []],
+    [undefined, []],
+  ] as const) {
+    const sessionID = `plugin-test-compacting-${level ?? "inactive"}`
+    if (level) {
+      await commandBefore(
+        { command: "burnedout", arguments: level, sessionID },
+        { parts: [textPart(sessionID)] },
+      )
+    }
+    const context: string[] = []
+    await compacting({ sessionID }, { context })
+    await duplicate["experimental.session.compacting"]({ sessionID }, { context })
+    assert.deepEqual(context, expected, `level ${level ?? "inactive"}`)
+  }
 })
 
 test("subagent prompt inherits the parent level", async () => {

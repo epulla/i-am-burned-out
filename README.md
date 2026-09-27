@@ -57,6 +57,12 @@ claude plugin install i-am-burned-out@i-am-burned-out
 
 Run `/burnedout ultra` when the codebase has wronged you, or `/burnedout-review` for a delete-list.
 
+Claude Code compaction takes instructions too (best-effort; OpenCode's plugin appends them automatically):
+
+```text
+/compact keep the goal, decisions with their reason, user constraints, exact paths, commands, and errors, failed approaches, and the next step; drop tool-output dumps and narration
+```
+
 **OpenCode**
 
 ```bash

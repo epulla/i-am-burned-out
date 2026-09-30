@@ -121,6 +121,12 @@ if ! grep -q 'Load the `burnedout-review` skill' commands/burnedout-review.md; t
 fi
 pass 'normalized command parity'
 
+bash scripts/agents-md.sh > "$tmp_dir/agents-md"
+if ! cmp -s "$tmp_dir/agents-md" AGENTS.md; then
+  fail 'AGENTS.md is stale; run: bash scripts/agents-md.sh > AGENTS.md'
+fi
+pass 'AGENTS.md generated from skill'
+
 PLUGIN='.opencode/plugins/burnedout.ts'
 if [ ! -f "$PLUGIN" ]; then
   fail "missing OpenCode plugin: $PLUGIN"

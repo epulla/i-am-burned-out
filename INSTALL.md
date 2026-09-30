@@ -521,7 +521,7 @@ Run the command matching the scope you installed.
 
 ## Always-on rules
 
-[`AGENTS.md`](AGENTS.md) is the shipped instruction-only, always-on version. Copy its contents into a project root or a host's persistent instruction file: `~/.codex/AGENTS.md`, `~/.config/opencode/AGENTS.md`, `~/.grok/AGENTS.md`, `~/.config/zed/AGENTS.md`, or `.github/copilot-instructions.md`. Cursor users can use User Rules or a project rule with `alwaysApply: true`.
+[`AGENTS.md`](AGENTS.md) is the shipped instruction-only, always-on version. Copy its contents into a project root or a host's persistent instruction file: `~/.codex/AGENTS.md`, `~/.config/opencode/AGENTS.md`, `~/.grok/AGENTS.md`, `~/.config/zed/AGENTS.md`, or `.github/copilot-instructions.md`. Cursor users can use User Rules or a project rule with `alwaysApply: true`. `AGENTS.md` is generated from the skill; after editing `skills/i-am-burned-out/SKILL.md`, run `bash scripts/agents-md.sh > AGENTS.md`.
 
 ## Activation
 

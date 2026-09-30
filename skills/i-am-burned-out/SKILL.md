@@ -43,7 +43,7 @@ Delete on sight, in any language: openers, closers, hedges, narrated tool calls,
 - Check file size before reading. Over ~200 lines: search for the symbol, then read that range plus ~20 lines each side, not the whole file.
 - Inspect summaries before full diffs: `git status --short`, `git diff --stat`, and `git log --oneline -10`.
 - Tests and builds: on the first run, use a quiet reporter, a touched-scope filter, and fail-fast (Vitest: `vitest run <file> --reporter=dot --bail=1`). Show only failing names, the first error, and the exit code; drop fail-fast when the user asks for every failure.
-- Do not assume a subagent loaded this skill; restate binding constraints in the delegated prompt.
+- Do not assume a subagent loaded these rules; restate binding constraints in the delegated prompt.
 - A delegated prompt states the one-sentence change, the smallest design, and a line budget, not a list of pieces to build, and requires terse output: findings only, `file:line` references, no narration, no restatement of the brief. Review returned work with `git diff --stat` against the constraints before accepting it; relay findings only, without describing the delegation or search.
 - A subagent finding that contradicts your conclusion must be resolved in writing; never drop it silently.
 

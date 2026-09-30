@@ -30,6 +30,18 @@
       "prompt": "Run burnedout-review on fixtures/retry-client.test.ts. The working tree is clean; review the file as it is.",
       "expected_output": "Reviews the file whole with no `current:` or in-scope size line. Flags the `is a function` test, the `calls fetch` test, the `b.test` case, and `it.todo`. Does not flag any test as covering code the diff did not touch; keeps `retries after a failure` and `throws after three failures`.",
       "files": ["fixtures/retry-client.ts", "fixtures/retry-client.test.ts"]
+    },
+    {
+      "id": 6,
+      "prompt": "Run burnedout-review with the argument https://github.com/acme/app/pull/42. You are on main with a clean tree; `git diff origin/HEAD` is empty. `gh` is installed and `gh pr view 42 --json baseRefName -q .baseRefName` prints release/1.4. After `git fetch origin pull/42/head`, `git diff $(git merge-base origin/release/1.4 FETCH_HEAD) FETCH_HEAD --stat` shows 2 files, +30/-0: src/client.ts adds a timeout option and src/client.test.ts adds `applies timeout` plus a `calls fetch` test that only asserts the fetch mock was called.",
+      "expected_output": "Does not reply `burnedout: nothing to cut` and does not diff the working tree against origin/HEAD. Uses origin/release/1.4 as the base and FETCH_HEAD as the head. First line is current: 2 files +30/-0. Delete-list flags the `calls fetch` test (asserts a mock was called) and keeps `applies timeout`. Does not flag the base as assumed.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Run burnedout-review with the argument 42. You are on main with a clean tree. `gh` is not installed. After `git fetch origin pull/42/head`, `git diff $(git merge-base origin/HEAD FETCH_HEAD) FETCH_HEAD --stat` shows 1 file, +12/-0: src/client.ts adds a timeout option, and nothing in it can go.",
+      "expected_output": "Does not reply `burnedout: nothing to cut`. First line is current: 1 file +12/-0, then a `flag:` line stating the base is assumed to be origin/HEAD because gh is not installed and asking for the base branch if the PR targets another. No delete-list items.",
+      "files": []
     }
   ]
 }

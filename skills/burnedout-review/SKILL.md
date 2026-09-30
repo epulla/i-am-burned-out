@@ -13,12 +13,13 @@ Review a change as a burned-out senior developer who has to maintain it: find wh
 
 ## Scope the diff
 
-1. Resolve the review base, stopping at the first that resolves: the user-supplied base when non-empty, then `git merge-base origin/HEAD HEAD`, then `git merge-base origin/main HEAD`. Confirm a candidate with `git rev-parse --verify` before using it.
-2. With a base, run `git status --short` and `git diff <base> --stat`. The single-ref form diffs the base against the working tree, so one pass covers committed, staged, and unstaged changes. Inspect files with `git diff <base> -- <file>`.
-3. If none resolve, because the repository has no remote, no `origin/HEAD`, a detached HEAD, or no commit yet, review the working tree alone: `git status --short`, `git diff --cached --stat`, and `git diff --stat`, inspecting files with `git diff --cached -- <file>` and `git diff -- <file>`.
-4. Read relevant untracked files separately. Read `--stat` first and diff only the files that matter; never dump the whole diff at once.
-5. If the user names files or directories instead of a change, or the directory is not a git repository, review those files whole and skip "What to cut in scope". In that mode, a test stays if breaking the behavior it covers would make it fail; skip the diff-only test rule and the size lines.
-6. If the user supplies only a change summary with no checkout to inspect, triage that summary: take `current:` from the supplied numbers, state in the first finding that the review is based on the supplied summary and not verified code, and never invent `file:line` locations.
+1. If the user supplies a PR number or GitHub PR URL, review that PR, not the working tree: `git fetch origin pull/N/head` and take `FETCH_HEAD` as the head. With `gh` installed, `gh pr view N --json baseRefName -q .baseRefName`, `git fetch origin <base>`, and use `git merge-base origin/<base> FETCH_HEAD` as the base. Without `gh`, use `git merge-base origin/HEAD FETCH_HEAD` and make the first finding `flag: base assumed origin/HEAD (gh not installed); pass the base branch if the PR targets another`. If the fetch fails, stop and report the error.
+2. Otherwise resolve the review base: a user-supplied base must pass `git rev-parse --verify`, and if it fails, stop and report the error; never fall through to a default. With no argument, take the first that resolves of `git merge-base origin/HEAD HEAD`, then `git merge-base origin/main HEAD`.
+3. With a base, run `git status --short` and `git diff <base> --stat`. The single-ref form diffs the base against the working tree, so one pass covers committed, staged, and unstaged changes. Inspect files with `git diff <base> -- <file>`. For a PR, skip `git status --short` and use `git diff <base> FETCH_HEAD --stat` and `git diff <base> FETCH_HEAD -- <file>`.
+4. If none resolve, because the repository has no remote, no `origin/HEAD`, a detached HEAD, or no commit yet, review the working tree alone: `git status --short`, `git diff --cached --stat`, and `git diff --stat`, inspecting files with `git diff --cached -- <file>` and `git diff -- <file>`.
+5. Read relevant untracked files separately. Read `--stat` first and diff only the files that matter; never dump the whole diff at once.
+6. If the user names files or directories instead of a change, or the directory is not a git repository, review those files whole and skip "What to cut in scope". In that mode, a test stays if breaking the behavior it covers would make it fail; skip the diff-only test rule and the size lines.
+7. If the user supplies only a change summary with no checkout to inspect, triage that summary: take `current:` from the supplied numbers, state in the first finding that the review is based on the supplied summary and not verified code, and never invent `file:line` locations.
 
 ## What to cut in scope
 

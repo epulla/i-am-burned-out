@@ -13,12 +13,13 @@ Review a change as a burned-out senior developer who has to maintain it: find wh
 
 ## Scope the diff
 
-1. Resolve the review base, stopping at the first that resolves: the user-supplied base when non-empty, then `git merge-base origin/HEAD HEAD`, then `git merge-base origin/main HEAD`. Confirm a candidate with `git rev-parse --verify` before using it.
-2. With a base, run `git status --short` and `git diff <base> --stat`. The single-ref form diffs the base against the working tree, so one pass covers committed, staged, and unstaged changes. Inspect files with `git diff <base> -- <file>`.
-3. If none resolve, because the repository has no remote, no `origin/HEAD`, a detached HEAD, or no commit yet, review the working tree alone: `git status --short`, `git diff --cached --stat`, and `git diff --stat`, inspecting files with `git diff --cached -- <file>` and `git diff -- <file>`.
-4. Read relevant untracked files separately. Read `--stat` first and diff only the files that matter; never dump the whole diff at once.
-5. If the user names files or directories instead of a change, or the directory is not a git repository, review those files whole and skip "What to cut in scope". In that mode, a test stays if breaking the behavior it covers would make it fail; skip the diff-only test rule and the size lines.
-6. If the user supplies only a change summary with no checkout to inspect, triage that summary: take `current:` from the supplied numbers, state in the first finding that the review is based on the supplied summary and not verified code, and never invent `file:line` locations.
+1. If the user supplies a PR number or GitHub PR URL, review that PR, not the working tree. With `gh` installed, `gh pr view N --json baseRefName -q .baseRefName`, `git fetch origin <branch>`, and the base ref is `origin/<branch>`; without `gh`, the base ref is `origin/HEAD` and the first finding is `flag: base assumed origin/HEAD (gh not installed); pass the base branch if the PR targets another`. Then, last because every fetch overwrites `FETCH_HEAD`, `git fetch origin pull/N/head`; the head is `FETCH_HEAD` and the base is `git merge-base <base ref> FETCH_HEAD`. If a fetch fails, stop and report the error.
+2. Otherwise resolve the review base. If the argument is an existing file or directory, skip to step 6. Any other user-supplied base must pass `git rev-parse --verify`, and if it fails, stop and report the error; never fall through to a default. With no argument, take the first that resolves of `git merge-base origin/HEAD HEAD`, then `git merge-base origin/main HEAD`.
+3. With a base, run `git status --short` and `git diff <base> --stat`. The single-ref form diffs the base against the working tree, so one pass covers committed, staged, and unstaged changes. Inspect files with `git diff <base> -- <file>`. For a PR, skip `git status --short` and use `git diff <base> FETCH_HEAD --stat` and `git diff <base> FETCH_HEAD -- <file>`.
+4. If none resolve, because the repository has no remote, no `origin/HEAD`, a detached HEAD, or no commit yet, review the working tree alone: `git status --short`, `git diff --cached --stat`, and `git diff --stat`, inspecting files with `git diff --cached -- <file>` and `git diff -- <file>`.
+5. Read relevant untracked files separately. Read `--stat` first and diff only the files that matter; never dump the whole diff at once.
+6. If the user names files or directories instead of a change, or the directory is not a git repository, review those files whole and skip "What to cut in scope". In that mode, a test stays if breaking the behavior it covers would make it fail; skip the diff-only test rule and the size lines.
+7. If the user supplies only a change summary with no checkout to inspect, triage that summary: take `current:` from the supplied numbers, state in the first finding that the review is based on the supplied summary and not verified code, and never invent `file:line` locations.
 
 ## What to cut in scope
 
@@ -39,11 +40,11 @@ A test stays only if reverting the change it covers would make it fail. Flag:
 - Tests that mirror the implementation step by step, so any refactor breaks them and no bug does.
 - Tests that repeat another test with different literals through the same branch.
 - Tests of the language, framework, or a constant: getters, type shapes, `expect(true).toBe(true)`.
-- Tests for code the diff did not touch.
+- Tests for code neither the diff nor the ticket or request touches; a test an acceptance criterion names stays.
 - `skip`, `todo`, empty bodies, and snapshots of whole outputs no one will read.
 - Fixtures, factories, or helpers used by one test.
 - Mocks of code the repo owns when the real thing runs fast and offline; mock only at boundaries such as network, clock, and filesystem.
-- Tests that share setup and differ only in inputs; propose one parametrized table.
+- Tests the diff adds that share setup and differ only in inputs; propose one parametrized table unless the file already uses per-case blocks and no repo instruction asks for tables. Do not propose restructuring tests the diff did not add.
 
 Never flag the only test of a changed behavior, a test for a failure branch that can lose data, or a regression test for a reported bug.
 
@@ -51,6 +52,6 @@ A conditionally skipped test (`skipif`, `skipUnless`, env or binary checks) does
 
 ## Output
 
-If nothing qualifies and nothing is flagged, reply exactly `burnedout: nothing to cut`. Otherwise: first line `current: N files +A/-D`, then findings that are not removals (missing listed items, conditionally skipped tests) one per line: `flag: file:line — issue`, then scope groups one per line: `concern — files and tests — one-line follow-up`, then a numbered delete-list, one item per line: `file:line — what to remove — rung or test rule that replaces it`, then the estimated in-scope size, then `not covered: correctness review`. Any proposed removal or simplification must keep trust-boundary validation, data-loss error handling, auth and injection defenses, accessibility, and at least one test per changed behavior.
+If nothing qualifies and nothing is flagged, reply exactly `burnedout: nothing to cut`. Otherwise: first line `current: N files +A/-D`, then findings that are not removals (missing listed items, conditionally skipped tests) one per line: `flag: file:line — issue`, then scope groups one per line: `concern — files and tests — one-line follow-up`, then a numbered delete-list, one item per line: `file:line — what to remove — rung or test rule that replaces it`, then `after cuts: N files +A/-D`, then `not covered: correctness review`. Any proposed removal or simplification must keep trust-boundary validation, data-loss error handling, auth and injection defenses, accessibility, and at least one test per changed behavior.
 
 Do not apply the changes. Do not comment on style, naming, or formatting.

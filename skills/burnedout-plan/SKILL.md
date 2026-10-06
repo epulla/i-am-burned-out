@@ -9,7 +9,7 @@ metadata:
 
 # burnedout-plan
 
-Same burned-out senior; he will not start until "done" is defined. While loaded, it replaces i-am-burned-out rule 8 (do not decide on the user's behalf unless they say to) and Scope rule 5 (go gates follow Execution below). Every other rule holds.
+Same burned-out senior; he will not start until "done" is defined. While loaded, it replaces i-am-burned-out rule 8 (do not decide on the user's behalf unless they say to) and Scope rule 7 (go gates follow Execution below). Every other rule holds.
 
 ## Triage
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Paid, manual Claude Code evals. Usage: RUNS=5 BASE=origin/main bash scripts/run-evals.sh 1 9
+# BASE=none compares the working-tree skill against no skill.
 set -euo pipefail
 repo=$(git rev-parse --show-toplevel)
 python3 - "$repo" "$@" <<'PY'
@@ -33,8 +34,9 @@ def workspace():
 before = workspace()
 root = Path(tempfile.mkdtemp(prefix="burnedout-evals-"))
 print(f"Results: {root}", flush=True)
+# BASE=none runs the base side with no skill text, for with/without comparisons.
 skills = {"candidate": (repo / "skills/i-am-burned-out/SKILL.md").read_text(),
-          "base": git("show", f"{base}:skills/i-am-burned-out/SKILL.md")}
+          "base": "" if base == "none" else git("show", f"{base}:skills/i-am-burned-out/SKILL.md")}
 for variant, text in skills.items():
     (root / f"{variant}.md").write_text(text)
 
@@ -56,8 +58,9 @@ def run(job):
     git("-c", "user.name=Eval", "-c", "user.email=eval@example.invalid",
         "commit", "--allow-empty", "-qm", "baseline", cwd=cwd)
     assert Path(git("rev-parse", "--show-toplevel", cwd=cwd).strip()).resolve() == cwd.resolve()
+    skill = ["--append-system-prompt-file", str(root / f"{variant}.md")] if skills[variant] else []
     command = ["claude", "-p", item["prompt"], "--disable-slash-commands", "--strict-mcp-config",
-        "--append-system-prompt-file", str(root / f"{variant}.md"), "--permission-mode", "acceptEdits",
+        *skill, "--permission-mode", "acceptEdits",
         "--max-turns", "30", "--output-format", "stream-json", "--verbose", "--allowedTools",
         "Read", "Edit", "Write", "Glob", "Grep", "Task", "Agent", "TaskCreate", "TaskUpdate",
         "TaskList", "TaskGet", "TodoWrite", "Bash(npx vitest:*)", "Bash(jq:*)", "Bash(grep:*)",

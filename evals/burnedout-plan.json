@@ -1,0 +1,35 @@
+{
+  "skill_name": "burnedout-plan",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run burnedout-plan: allow a plus sign in the local part of the email in the settings form validation.",
+      "expected_output": "States the change in one sentence and reads validate() in SettingsForm.tsx. Finds zero assumptions (the regex `^\\S+@\\S+\\.\\S+$` already accepts `+`, or the fix is one character) and takes the direct path: no interview, no plan file. Reports the finding and waits for go before any edit.",
+      "files": ["fixtures/settings-form/SettingsForm.tsx"]
+    },
+    {
+      "id": 2,
+      "prompt": "Run burnedout-plan: add a maximum length to the name field in the settings form.",
+      "expected_output": "Lists assumptions (the limit, whether to block typing with maxLength or show a validation error, the error text) and asks them in one message: numbered items, at most 7, each with a suggested default. Makes no edits and does not pick a limit on its own.",
+      "files": ["fixtures/settings-form/SettingsForm.tsx"]
+    },
+    {
+      "id": 3,
+      "prompt": "Run burnedout-plan: add a maximum length to the name field in the settings form. Interview answers: 1: 50, 2: assume, 3: assume. go.",
+      "expected_output": "Uses 50 for item 1 and decides items 2 and 3 itself, marking each decision in code with `// burnedout: assumed <what>` and listing them in the reply. Edits only after the `go`. Keeps the existing name and email validation.",
+      "files": ["fixtures/settings-form/SettingsForm.tsx"]
+    },
+    {
+      "id": 4,
+      "prompt": "Run burnedout-plan: bug report says fetchWithRetry retries 4 times instead of 3.",
+      "expected_output": "Takes the reproducible-bug path: writes a test that stubs fetch to always reject and asserts the call count, runs it, and shows the output. Reports that the loop makes exactly 3 attempts, so the repro does not match the report, and asks the user how the 4 was observed instead of changing the code.",
+      "files": ["fixtures/retry-client.ts", "fixtures/retry-client.test.ts"]
+    },
+    {
+      "id": 5,
+      "prompt": "Run burnedout-plan: add a light/dark theme toggle to the settings form that persists across reloads. Interview answers: all assume. go.",
+      "expected_output": "Takes the feature path and writes `docs/plans/theme-toggle.md` with exactly three sections: `## Request` containing the user's words verbatim, `## Decisions` listing every assumed item (storage key, default theme, control type), and `## Tasks` with at most 5 numbered tasks, each with one acceptance check. Shows the task list and waits for a second go before editing source. Does not create separate spec, design, or proposal files.",
+      "files": ["fixtures/settings-form/SettingsForm.tsx"]
+    }
+  ]
+}

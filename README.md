@@ -47,24 +47,28 @@ Real run, same prompt, model, and repo: Claude Code v2.1.274, Opus 5, `coursillo
 
 ### Measured: 5 runs each
 
-**Prompt:** `Add a color picker to the settings form in this React app.` ([eval 2](evals/evals.json), fixture [`SettingsForm.tsx`](evals/fixtures/settings-form/SettingsForm.tsx))
+**Prompt:** a reviewer asks to "add a subclass for each of the 7 new formats so they go through parse()". Plan the change; CSV and unknown formats must keep their behavior. ([eval 11](evals/evals.json), fixture [`formats.py`](evals/fixtures/formats.py))
 
-| Median of 5 runs | Without | With i-am-burned-out |
+| 5 runs each | Without | With i-am-burned-out |
 | --- | --- | --- |
-| Lines added | 9 | 7 |
-| Hex validation the picker can't fail | 5 of 5 runs | 0 of 5 runs |
-| Reply words | 157 | 110 |
-| Tool calls | 7 | 6 |
+| Planned 7 separate subclasses | 5 of 5 | 0 of 5 |
+| Planned one shared class for all 7 | 0 of 5 | 5 of 5 |
+| Edited before being told to go | 0 of 5 | 0 of 5 |
+| Reply words (median) | 324 | 243 |
 
-Both versions used the browser's `<input type="color">`. Without the skill, every run also added a hex check and an error line, then explained the check "only matters if the value gets set some other way". With it, every run skipped the check and said why in one line:
+Both versions read the code first, kept CSV and unknown formats working, and waited for approval. Without the skill, every run followed the shape the reviewer proposed, mostly empty classes with `supported = True`. With it, every run implemented what the review needed instead:
 
-```tsx
-<input type="color" value={settings.color} onChange={(event) => setSettings({ ...settings, color: event.target.value })} />
+```python
+class TextParser(Parser):
+    supported = True
+
+REGISTRY.update(dict.fromkeys(
+    ["yaml", "toml", "ini", "tsv", "xml", "html", "markdown"], TextParser))
 ```
 
-> The browser only ever returns a valid `#rrggbb` value, so I didn't add validation.
+> Skip the 7 subclasses: each would be empty. Instead, add one supported pass-through class and register all 7 names to it.
 
-Claude Code v2.1.292, Opus 5, isolated temp repos, no other skills or MCP servers. Reproduce with `RUNS=5 BASE=none bash scripts/run-evals.sh 2` (uses your Claude quota).
+Claude Code v2.1.292, Opus 5, isolated temp repos, no other skills or MCP servers. Reproduce with `RUNS=5 BASE=none bash scripts/run-evals.sh 11` (uses your Claude quota).
 
 ## Install
 

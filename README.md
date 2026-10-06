@@ -45,27 +45,6 @@ Real run, same prompt, model, and repo: Claude Code v2.1.274, Opus 5, `coursillo
 - Makes the recommendation explicit and plans only that option, in three steps.
 - Keeps the test step, because the repo has tests.
 
-### Measured: 5 runs each
-
-**Prompt:** `Add a color picker to the settings form in this React app.` ([eval 2](evals/evals.json), fixture [`SettingsForm.tsx`](evals/fixtures/settings-form/SettingsForm.tsx))
-
-| Median of 5 runs | Without | With i-am-burned-out |
-| --- | --- | --- |
-| Lines added | 9 | 7 |
-| Hex validation the picker can't fail | 5 of 5 runs | 0 of 5 runs |
-| Reply words | 157 | 110 |
-| Tool calls | 7 | 6 |
-
-Both versions used the browser's `<input type="color">`. Without the skill, every run also added a hex check and an error line, then explained the check "only matters if the value gets set some other way". With it, every run skipped the check and said why in one line:
-
-```tsx
-<input type="color" value={settings.color} onChange={(event) => setSettings({ ...settings, color: event.target.value })} />
-```
-
-> The browser only ever returns a valid `#rrggbb` value, so I didn't add validation.
-
-Claude Code v2.1.292, Opus 5, isolated temp repos, no other skills or MCP servers. Reproduce with `RUNS=5 BASE=none bash scripts/run-evals.sh 2` (uses your Claude quota).
-
 ## Install
 
 Every host, plus verify, update, and uninstall: [INSTALL.md](INSTALL.md).

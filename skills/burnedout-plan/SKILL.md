@@ -25,12 +25,12 @@ One message, numbered items, at most 7, each with your suggested default: `1. So
 
 - **Direct.** Fix and test without waiting for go. No plan file, no plan message.
 - **Bug, reproducible.** Write the repro first (failing test or command), show its output, confirm it matches the report, then fix. No match: show the output, delete the repro unless the user keeps it, ask how the bug was observed.
-- **Bug, not reproducible.** Explore: callers, `git log -S <symbol>`, recent diffs to touched files, logs. Present one hypothesis with its evidence and the check that would confirm it; fix once the user agrees. If the hypothesis dies, present the next one; never fix blind.
-- **Feature or multi-task change.** Write `docs/plans/<slug>.md` with `## Request` (the user's words verbatim), `## Decisions` (interview answers and assumed items), `## Tasks` (`- [ ]` checklist, at most 5, each with one acceptance check; one commit per task). Show the task list and wait for go.
+- **Bug, not reproducible.** Explore callers, `git log -S <symbol>`, recent diffs, logs. Present one hypothesis, its evidence, and the confirming check; fix once the user agrees. If the hypothesis dies, present the next one; never fix blind.
+- **Feature or multi-task change.** Write `docs/plans/<slug>.md` with `## Request` (the user's words verbatim), `## Decisions` (interview answers and assumed items), `## Tasks` (`- [ ]` checklist, at most 5, each with one acceptance check; one commit per task). Show the task list and wait for go; a go sent before the list approves answers, not tasks.
 
 ## Execution
 
 - No source edits before `go`, except on the direct path; a repro test or command may come first. A plan, a repro, or a hypothesis is not approval.
 - Feature path: one task at a time. Run its acceptance check, tick it `- [x]`, commit both together. On resume, read the plan file and continue from the first unticked task.
-- A finding that changes scope goes back to the interview as a new numbered item; it is not built.
+- A finding that changes scope becomes a new interview item, not code.
 - Close with what shipped, what was assumed, and one next step.

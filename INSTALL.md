@@ -239,6 +239,8 @@ npx skills update -g
 
 Run the first command for a project install or the second for a global install.
 
+`update` only refreshes skills you already have. To get a skill added in a new release (such as `burnedout-plan` in 0.10.0), rerun the install command.
+
 ### Uninstall
 
 ```bash
@@ -344,6 +346,8 @@ npx skills update -g
 ```
 
 Rerun all four `curl` commands to update the slash commands and the plugin.
+
+`update` only refreshes skills you already have. To get a skill added in a new release (such as `burnedout-plan` in 0.10.0), rerun `npx skills add epulla/i-am-burned-out -a opencode -g -y`. Rerunning the `curl` commands also adds new slash commands.
 
 ### Uninstall
 
@@ -512,6 +516,8 @@ npx skills update -g
 ```
 
 Run the first command for a workspace install or the second for a global install.
+
+`update` only refreshes skills you already have. To get a skill added in a new release (such as `burnedout-plan` in 0.10.0), rerun the install command.
 
 ### Uninstall
 

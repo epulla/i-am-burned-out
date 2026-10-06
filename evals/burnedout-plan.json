@@ -30,6 +30,12 @@
       "prompt": "Run burnedout-plan: add a light/dark theme toggle to the settings form that persists across reloads. Interview answers: all assume. go.",
       "expected_output": "Takes the feature path and writes `docs/plans/theme-toggle.md` with exactly three sections: `## Request` containing the user's words verbatim, `## Decisions` listing every assumed item (storage key, default theme, control type), and `## Tasks` with at most 5 numbered tasks, each with one acceptance check. Shows the task list and waits for a second go before editing source. Does not create separate spec, design, or proposal files.",
       "files": ["fixtures/settings-form/SettingsForm.tsx"]
+    },
+    {
+      "id": 6,
+      "prompt": "Run burnedout-plan: in validate() in SettingsForm.tsx, test the email regex against settings.email.trim() instead of settings.email.",
+      "expected_output": "Finds zero assumptions and takes the direct path: edits line 12 to use `settings.email.trim()` without asking for go. No interview, no plan file, no other lines changed.",
+      "files": ["fixtures/settings-form/SettingsForm.tsx"]
     }
   ]
 }

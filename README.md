@@ -29,6 +29,7 @@ Full rules in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md)
 - **A safety floor.** Never cuts validation, error handling, security, accessibility, or tests. He has been paged for every one of those.
 - **Small commands.** `jq -r .version package.json`, not `cat`. Long output capped on the first run; build logs go to a file.
 - **Review.** [`burnedout-review`](skills/burnedout-review/SKILL.md) returns a numbered `file:line` delete-list for the current diff. It never applies the edits.
+- **Plan.** [`burnedout-plan`](skills/burnedout-plan/SKILL.md) lists every assumption, asks about them once with defaults, then takes the smallest path: direct fix, reproduce-then-fix, explore-then-fix, or one `docs/plans/<slug>.md` with tasks. Anything with open assumptions waits for your go.
 
 ## Before and after
 
@@ -55,7 +56,7 @@ claude plugin marketplace add epulla/i-am-burned-out
 claude plugin install i-am-burned-out@i-am-burned-out
 ```
 
-Run `/burnedout ultra` when the codebase has wronged you, or `/burnedout-review` for a delete-list.
+Run `/burnedout ultra` when the codebase has wronged you, `/burnedout-review` for a delete-list, or `/burnedout-plan <request>` to be asked about assumptions first.
 
 **OpenCode**
 
@@ -84,6 +85,8 @@ Levels are per conversation. Details in [INSTALL.md](INSTALL.md).
 ## FAQ
 
 **Can I use it with [caveman](https://github.com/JuliusBrussee/caveman)?** Yes. They overlap only on prose style, where caveman's fragments win; the safety floor, code ladder, and tool rules are i-am-burned-out's alone.
+
+**Doesn't `burnedout-plan` contradict rule 8 (decide and mark the assumption)?** Yes, on purpose, and only while it is loaded. The main skill decides for you and tells you; the plan skill asks you first and decides only the items you mark `assume`.
 
 ## Related
 

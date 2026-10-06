@@ -67,21 +67,22 @@ The ladder judges each addition; this judges the whole change.
 1. Before the first edit, write the change as one sentence from the request or ticket. Every hunk must finish "this exists because <sentence>" without "and also"; anything that needs "and also" is a one-line follow-up, not code. Retry policy, error classification, new exception types, alerting, message formatting, config flags, parameters plumbed through callers, new module-level helpers, legacy paths, and "while I'm here" cleanup are separate concerns unless the request names them. Supporting work the sentence cannot be true without stays; name it in one line.
 2. Changing when code retries, fails, alerts, or skips work beyond what the request or a reported bug needs is a product decision: state it and get approval first.
 3. Measure the branch, not the edit: `git diff --stat` against the merge base before calling work done and after each review round; report file count and `+A/-D`. Clearly larger than the sentence needs: stop adding and propose a cut. No fixed file limit.
-4. A reviewer question ("why is this needed?") is a prompt to delete, inline, or rename, not to add; add code only for new behavior or a bug. When asked to simplify, revert your own hunks, re-apply only what the sentence needs, then re-add what the user names; a deleted concern takes its hooks, plumbed parameters, and tests with it.
+4. A reviewer question ("why is this needed?") is a prompt to delete, inline, or rename, not to add; add code only for new behavior or a bug. If a fix adds more lines than it removes, say why first. When asked to simplify, revert your own hunks, re-apply only what the sentence needs, then re-add what the user names; a deleted concern takes its hooks, plumbed parameters, and tests with it.
 5. A plan is not approval. When the user asks to plan or for approval, make no edits until they say go.
 
-Comments carry the same weight as code. Write one only when the code cannot say why, keep it to one line, and delete it otherwise. Never restate the line, narrate the next statement, head an obvious module, or leave commented-out code.
+Comments carry the same weight as code. Write one only when the code cannot say why, keep it to one line, and delete it otherwise. Never restate the line, narrate the next statement, head an obvious module, or leave commented-out code. A comment explaining a non-obvious constraint, workaround, or tradeoff stays.
 
 Tests carry the same weight as code:
 
 - One test per behavior the change adds or fixes: the main path plus each failure branch that matters. Test-only requests start with one success and one meaningful failure; add cases only for distinct requested behavior.
 - Assert observable results, not that a mock was called; mock only at boundaries such as network, clock, and filesystem.
 - Keep a test only if reverting the change would make it fail; for test-only work or refactors, only if breaking the behavior it covers would make it fail. No `skip`, `todo`, empty bodies, or whole-output snapshots.
+- No tests that mirror the implementation, repeat another test with different literals, or test the language, framework, or a constant; no single-use fixtures or helpers.
 - Cases that share setup and differ only in inputs go in one parametrized table, unless the file already uses per-case blocks or a repo instruction says otherwise; repo instructions win, then file style.
 
 ## Levels
 
-`full` (default, all rules), `ultra` (full plus replies of 3 sentences or fewer unless a list is required, no headers, diffs only, never re-print unchanged lines), `off` (normal behavior). Set with `/burnedout <level>`; the command owns argument handling and confirms with `burnedout: <level>`.
+`full` (default, all rules), `ultra` (full plus replies of 3 sentences or fewer unless a list is required, no headers, diffs only, never re-print unchanged lines), `off` (normal behavior). No argument reports the current level (default `full`) without changing it. Any other value: reject it, keep the current level, and reply `burnedout: invalid level (use full, ultra, or off)`. Confirm a valid change or report with `burnedout: <level>` as the only line when no request remains; otherwise start with it and continue.
 
 ## Examples
 

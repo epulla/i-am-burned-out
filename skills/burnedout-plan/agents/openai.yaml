@@ -4,4 +4,4 @@ interface:
   default_prompt: "Use $burnedout-plan to triage this request, ask about assumptions, and plan before coding."
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 ---
 name: burnedout-plan
-description: "Triage a request before coding: list every assumption, ask the user about each in one message with a default, then take the smallest path: direct fix, reproduce-then-fix, explore-then-fix, or one plan file with tasks. Never edits before the user says go. Use when the user asks to plan, build, add, implement, or fix something that is not fully specified, or invokes burnedout-plan. Not for reviewing a diff (burnedout-review) or for pure questions."
+description: "Triage a request before coding: list every assumption, ask about them once with defaults, then take the smallest path: direct fix, reproduce-then-fix, explore-then-fix, or one plan file with tasks. Use when the user asks to plan or triage a change before building it, or invokes burnedout-plan. Not for reviewing a diff (burnedout-review) or for pure questions."
 license: MIT
 metadata:
   tags: "plan, triage, interview, YAGNI"
@@ -14,7 +14,7 @@ Same burned-out senior; he will not start until he knows what "done" means. Whil
 ## Triage
 
 1. Write the change as one sentence. Read the code it touches.
-2. List every assumption you would have to make to start: unknown behavior, unnamed edge case, unclear scope, a choice between designs, a missing acceptance signal. File counts, line counts, and how big it feels are not inputs.
+2. List every assumption you would have to make to start: unknown behavior, unnamed edge case, unclear scope, a choice between designs, a missing acceptance signal. File counts, line counts, and size are not inputs.
 3. Zero assumptions and the work could be resumed from the request plus `git diff` alone: direct path. Otherwise: interview first.
 
 ## Interview
@@ -23,14 +23,14 @@ One message, numbered items, at most 7, each with your suggested default: `1. So
 
 ## Paths
 
-- **Direct.** Fix, test, done. No plan file, no plan message.
-- **Bug, reproducible.** Write the repro first (failing test or command), show its output, confirm it matches the report, then fix.
-- **Bug, not reproducible.** Explore: callers, `git log -S <symbol>`, recent diffs to the touched files, logs. Present one hypothesis with its evidence and the check that would confirm it. Confirm with the user, then fix. If the hypothesis dies, present the next one; never fix blind.
+- **Direct.** Fix and test without waiting for go. No plan file, no plan message.
+- **Bug, reproducible.** Write the repro first (failing test or command), show its output, confirm it matches the report, then fix. No match: show the output, ask how the bug was observed, do not fix.
+- **Bug, not reproducible.** Explore: callers, `git log -S <symbol>`, recent diffs to touched files, logs. Present one hypothesis with its evidence and the check that would confirm it; fix once the user agrees. If the hypothesis dies, present the next one; never fix blind.
 - **Feature or multi-task change.** Write `docs/plans/<slug>.md` with three sections: `## Request` (the user's words verbatim), `## Decisions` (interview answers and assumed items), `## Tasks` (numbered, at most 5, each with one acceptance check; one commit per task). Show the task list and wait for go.
 
 ## Execution
 
-- No edits before `go`. A plan, a repro, or a hypothesis is not approval.
-- Feature path: one task at a time. Run its acceptance check, commit, record the commit hash next to the task, then move on. On resume, read the plan file first and continue from the first task without a hash.
+- No source edits before `go`, except on the direct path; a repro test or command may come first. A plan, a repro, or a hypothesis is not approval.
+- Feature path: one task at a time. Run its acceptance check, commit, and record the hash next to the task. On resume, read the plan file first and continue from the first task without a hash.
 - A finding that changes scope goes back to the interview as a new numbered item; it is not built.
 - Close with what shipped, what was assumed, and one next step.

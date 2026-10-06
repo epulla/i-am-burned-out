@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Run burnedout-plan: allow a plus sign in the local part of the email in the settings form validation.",
-      "expected_output": "States the change in one sentence and reads validate() in SettingsForm.tsx. Finds zero assumptions (the regex `^\\S+@\\S+\\.\\S+$` already accepts `+`, or the fix is one character) and takes the direct path: no interview, no plan file. Reports the finding and waits for go before any edit.",
+      "expected_output": "States the change in one sentence and reads validate() in SettingsForm.tsx. Finds that the regex `^\\S+@\\S+\\.\\S+$` already accepts `+` and reports that no change is needed. No interview, no plan file, no edit.",
       "files": ["fixtures/settings-form/SettingsForm.tsx"]
     },
     {
@@ -15,8 +15,8 @@
     },
     {
       "id": 3,
-      "prompt": "Run burnedout-plan: add a maximum length to the name field in the settings form. Interview answers: 1: 50, 2: assume, 3: assume. go.",
-      "expected_output": "Uses 50 for item 1 and decides items 2 and 3 itself, marking each decision in code with `// burnedout: assumed <what>` and listing them in the reply. Edits only after the `go`. Keeps the existing name and email validation.",
+      "prompt": "Run burnedout-plan: add a maximum length to the name field in the settings form. Interview answers: limit 50, everything else assume. go.",
+      "expected_output": "Uses 50 as the limit and decides every other item itself, marking each decision in code with `// burnedout: assumed <what>` and listing them in the reply. Edits only after the `go`. Keeps the existing name and email validation.",
       "files": ["fixtures/settings-form/SettingsForm.tsx"]
     },
     {

@@ -29,7 +29,7 @@ Full rules in [skills/i-am-burned-out/SKILL.md](skills/i-am-burned-out/SKILL.md)
 - **A safety floor.** Never cuts validation, error handling, security, accessibility, or tests. He has been paged for every one of those.
 - **Small commands.** `jq -r .version package.json`, not `cat`. Long output capped on the first run; build logs go to a file.
 - **Review.** [`burnedout-review`](skills/burnedout-review/SKILL.md) returns a numbered `file:line` delete-list for the current diff. It never applies the edits.
-- **Plan.** [`burnedout-plan`](skills/burnedout-plan/SKILL.md) lists every assumption, asks about them once with defaults, then takes the smallest path: direct fix, reproduce-then-fix, explore-then-fix, or one `docs/plans/<slug>.md` with tasks. No edits before you say go.
+- **Plan.** [`burnedout-plan`](skills/burnedout-plan/SKILL.md) lists every assumption, asks about them once with defaults, then takes the smallest path: direct fix, reproduce-then-fix, explore-then-fix, or one `docs/plans/<slug>.md` with tasks. Anything with open assumptions waits for your go.
 
 ## Before and after
 
@@ -56,7 +56,7 @@ claude plugin marketplace add epulla/i-am-burned-out
 claude plugin install i-am-burned-out@i-am-burned-out
 ```
 
-Run `/burnedout ultra` when the codebase has wronged you, `/burnedout-review` for a delete-list, or `/burnedout-plan <request>` to be asked before anything is built.
+Run `/burnedout ultra` when the codebase has wronged you, `/burnedout-review` for a delete-list, or `/burnedout-plan <request>` to be asked about assumptions first.
 
 **OpenCode**
 

@@ -104,7 +104,7 @@ codex plugin marketplace add epulla/i-am-burned-out --ref main
 codex plugin add i-am-burned-out@i-am-burned-out
 ```
 
-Inside Codex, invoke `$i-am-burned-out`. Add `at full`, `at ultra`, or `at off` to select a level. Other levels are rejected without changing the current level. Invoke `$burnedout-review` for a delete-list from the current branch, or `$burnedout-plan` to be asked about assumptions first. `$burnedout-plan` never loads implicitly; invoke it by name.
+Inside Codex, invoke `$i-am-burned-out`. Add `at full`, `at ultra`, or `at off` to select a level. Other levels are rejected without changing the current level. Invoke `$burnedout-review` for a delete-list from the current branch, or `$burnedout-plan` to be asked about assumptions first.
 
 ### Verify
 

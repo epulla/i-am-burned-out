@@ -27,3 +27,9 @@
 - Do not attribute the earlier crash to this plugin without evidence.
 - Do not modify unrelated plugins, credentials, global configuration, or skill rules.
 - If command-transform invocation or attachment behavior differs from the documented V2 API, resolve it against the actual API before implementation; do not depend on parsing Markdown wording to identify commands.
+
+## Follow-up: V2 command precedence
+
+User approved proceeding after session `ses_edc4028efffe3nL8G8N7SmgJzB` showed a correct model reply but no plugin confirmation. V2 2.0.26 registers `opencode.config.command` after external plugins, overriding the task 1 command transform. Loading alone did not verify command execution.
+
+- [x] Replace the overridden command transform with a prompt hook that matches the complete template using `$ARGUMENTS` captures, leaving the file command and attachments intact. Add an isolated real-server regression for fresh query, ultra, query, invalid, query, off, query; deny every provider to prevent model requests. Acceptance: the old plugin fails the real-server test at the first query; the fix passes all seven commands. All 20 unit tests, API type-checking, and repository checks pass. Docs updated; global copy verified unchanged, backed up to `~/.config/opencode/backups/burnedout-20261009-220725.ts`, and replaced with tested source. V2 reports it active; service was not restarted. One follow-up commit.

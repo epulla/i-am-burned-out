@@ -330,7 +330,7 @@ Restart OpenCode and run `/burnedout full`. The `npx skills add` command install
 
 The plugin is optional. Without it, `/burnedout` works but the level is only an instruction the model has to remember. With it, the level is per-session state: queries and invalid values leave state unchanged, and the plugin adds the current-level or exact invalid-level response instruction to the command prompt. A fresh query reports `full` without enabling injection. The active level pointer is re-injected before agent-loop model requests, with `ultra` rules added when selected, and delegated subagent prompts inherit the active level plus a terse-output constraint (findings only, `file:line`, no narration). The plugin enforces state and prompt injection, not the model's final wording. `off` stops injection, but cannot remove skill text already loaded into the conversation.
 
-`burnedout.ts` supports OpenCode V1 1.18.29+ and V2 2.0.26+; runtime loading was verified on both minimum versions without model requests. V2 also discovers `~/.config/opencode/plugins/` and `.opencode/plugins/`, so these install paths stay unchanged. Keep `commands/burnedout.md` beside the `plugins/` directory: V2 reads that template during setup and registers the command without parsing its wording.
+`burnedout.ts` supports OpenCode V1 1.18.29+ and V2 2.0.26+; runtime loading was verified on both minimum versions. V2 command execution is also covered by an isolated real-server test with all providers denied. V2 discovers `~/.config/opencode/plugins/` and `.opencode/plugins/`, so these install paths stay unchanged. Keep `commands/burnedout.md` beside the `plugins/` directory: V2 reads it during setup and matches its expanded `$ARGUMENTS` placeholders in the prompt hook. The file command retains control, avoiding V2's later config-command registration overriding plugin transforms. If you edit the template, reload the plugin or restart the service to refresh its matcher.
 
 Level state is in memory. A server restart or plugin module reload can reset it; run `/burnedout full` or `/burnedout ultra` again afterward. Restart V1 after updates; V2 watches configuration files, though restarting its service also resets in-memory state.
 
@@ -350,9 +350,10 @@ pnpm install --frozen-lockfile
 pnpm typecheck
 pnpm test
 bash scripts/check.sh
+pnpm test:runtime
 ```
 
-The pinned V1/V2 API packages are development-only; users installing the single plugin file do not need them.
+The pinned V1/V2 API packages are development-only; users installing the single plugin file do not need them. `test:runtime` requires the V2 CLI on `PATH` (or `OPENCODE_V2_BIN` pointing to it); it uses a disposable home and server, verifies the seven-command sequence, and cannot call a paid model.
 
 ### Update
 

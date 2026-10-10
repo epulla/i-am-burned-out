@@ -70,29 +70,24 @@ const server = (async () => ({
 export default {
   id: "burnedout",
   server,
-  setup: async (ctx: Pick<Context, "command" | "tool" | "session">) => {
+  setup: async (ctx: Pick<Context, "tool" | "session">) => {
     const template = (await readFile(new URL("../commands/burnedout.md", import.meta.url), "utf8"))
       .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "").trim()
-    await ctx.command.transform((editor) => {
-      editor.add({
-        name: "burnedout",
-        description: "Set the burnedout level (full | ultra | off) or report the current one",
-        execute: async ({ sessionID, prompt, delivery }) => {
-          const argument = prompt.text.trim()
-          const valid = argument === "" || isLevel(argument)
-          if (isLevel(argument)) bySession.set(sessionID, argument)
-          const line = valid ? `burnedout: ${bySession.get(sessionID) ?? DEFAULT}`
-            : "burnedout: invalid level (use full, ultra, or off)"
-          const parts = [{ type: "text", text: template.replaceAll("$ARGUMENTS", () => prompt.text) }]
-          reply(parts, line)
-          await ctx.session.prompt({
-            ...prompt, sessionID, delivery, text: parts[0].text,
-            files: prompt.files?.map(({ mention, ...file }) => file),
-            skills: prompt.skills?.map(({ mention, ...skill }) => skill),
-            agents: prompt.agents?.map(({ mention, ...agent }) => agent),
-          })
-        },
-      })
+    const pattern = new RegExp("^" + template.split("$ARGUMENTS").map((part, index) =>
+      (index === 0 ? "" : index === 1 ? "([\\s\\S]*?)" : "\\1") + part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+    ).join("") + "$")
+    // V2's config plugin registers file commands after external command transforms.
+    await ctx.session.hook("prompt", (event) => {
+      const match = pattern.exec(event.prompt.text)
+      if (match?.[1] === undefined) return
+      const argument = match[1].trim()
+      const valid = argument === "" || isLevel(argument)
+      if (isLevel(argument)) bySession.set(event.sessionID, argument)
+      const line = valid ? `burnedout: ${bySession.get(event.sessionID) ?? DEFAULT}`
+        : "burnedout: invalid level (use full, ultra, or off)"
+      const parts = [{ type: "text", text: event.prompt.text }]
+      reply(parts, line)
+      event.prompt.text = parts[0].text
     })
     await ctx.tool.hook("execute.before", (event) => {
       if (event.tool !== "subagent") return

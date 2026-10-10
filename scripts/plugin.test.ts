@@ -27,7 +27,8 @@ function textPart(sessionID: string, text = RENDERED_COMMAND) {
 }
 
 function v2Context() {
-  let command
+  const template = readFileSync(new URL("../.opencode/commands/burnedout.md", import.meta.url), "utf8")
+    .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "").trim()
   const prompts = []
   const toolHooks: Record<string, (event: { tool: string; sessionID: string; input: { agent: string; description: string; prompt: string } }) => void> = {}
   const sessionHooks: Record<string, (event: { sessionID: string; system?: { type: string; text?: string }[]; prompt?: { text: string } }) => void> = {}
@@ -35,14 +36,15 @@ function v2Context() {
     toolHooks,
     sessionHooks,
     prompts,
-    execute: async (sessionID: string, text: string, attachments = {}, delivery = "steer") =>
-      command.execute({ sessionID, prompt: { text, ...attachments }, delivery }),
+    execute: async (sessionID: string, text: string, attachments = {}, delivery = "steer") => {
+      const event = { sessionID, prompt: { text: template.replaceAll("$ARGUMENTS", () => text), ...attachments }, delivery }
+      await sessionHooks.prompt(event)
+      prompts.push({ ...event.prompt, sessionID, delivery: event.delivery })
+    },
     ctx: {
-      command: { transform: async (callback) => { callback({ add: (definition) => { command = definition } }) } },
       tool: { hook: async (name: string, callback: (event: { tool: string; sessionID: string; input: { agent: string; description: string; prompt: string } }) => void) => { toolHooks[name] = callback } },
       session: {
         hook: async (name: string, callback: (event: { sessionID: string; system?: { type: string; text?: string }[]; prompt?: { text: string } }) => void) => { sessionHooks[name] = callback },
-        prompt: async (input) => { prompts.push(input) },
       },
     },
   }
@@ -136,7 +138,7 @@ test("V2 command confirmations and state match V1 across queries, invalid input,
   assert.ok(prompts.at(-1).text.includes("Confirm with burnedout: full."))
 })
 
-test("V2 command retains attachments and delivery without stale mention offsets", async () => {
+test("V2 prompt hook only appends text, preserving attachments and delivery", async () => {
   const { ctx, execute, prompts } = v2Context()
   await plugin.setup(ctx)
   const mention = { start: 0, end: 4, text: "full" }
@@ -144,10 +146,26 @@ test("V2 command retains attachments and delivery without stale mention offsets"
     files: [{ uri: "file:///example.md", name: "example.md", mention }],
     skills: [{ id: "review", mention }], agents: [{ id: "general", mention }],
   }, "queue")
-  assert.deepEqual(prompts[0].files, [{ uri: "file:///example.md", name: "example.md" }])
-  assert.deepEqual(prompts[0].skills, [{ id: "review" }])
-  assert.deepEqual(prompts[0].agents, [{ id: "general" }])
+  assert.deepEqual(prompts[0].files, [{ uri: "file:///example.md", name: "example.md", mention }])
+  assert.deepEqual(prompts[0].skills, [{ id: "review", mention }])
+  assert.deepEqual(prompts[0].agents, [{ id: "general", mention }])
   assert.equal(prompts[0].delivery, "queue")
+})
+
+test("V2 ignores ordinary prompts and does not process confirmations twice", async () => {
+  const { ctx, sessionHooks, execute, prompts } = v2Context()
+  await plugin.setup(ctx)
+  const sessionID = "plugin-test-v2-unrelated"
+  const event = { sessionID, prompt: { text: "1. Unless `ultra` is `off`, load the skill" } }
+  sessionHooks.prompt(event)
+  assert.equal(event.prompt.text, "1. Unless `ultra` is `off`, load the skill")
+  const system = []
+  sessionHooks.context({ sessionID, system })
+  assert.deepEqual(system, [])
+  await execute(sessionID, "ultra")
+  const confirmed = { sessionID, prompt: { text: prompts.at(-1).text } }
+  sessionHooks.prompt(confirmed)
+  assert.equal(confirmed.prompt.text, prompts.at(-1).text)
 })
 
 test("default query preserves rendered command template exactly", async () => {

@@ -12,7 +12,7 @@ const POINTER = "burnedout: follow i-am-burned-out skill instructions."
 const ULTRA =
   "burnedout level ultra: keep chat replies to 3 sentences or fewer unless a list is required, no headers, diffs only, never re-print unchanged lines."
 const SUBAGENT =
-  "burnedout: reply with findings only, file:line references, no narration, no restatement of the brief."
+  "burnedout: reply with findings only, file:line references, no narration, no restatement of the brief. If given numbered steps, follow them in order, change nothing outside them, and stop and report on any mismatch."
 
 const isLevel = (value: string): value is Level => (LEVELS as readonly string[]).includes(value)
 

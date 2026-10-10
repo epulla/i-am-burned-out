@@ -9,11 +9,11 @@ const ULTRA =
 const SUBAGENT =
   "burnedout: reply with findings only, file:line references, no narration, no restatement of the brief."
 
-const hooks = await plugin()
+const hooks = await plugin.server()
 const commandBefore = hooks["command.execute.before"]
 const systemTransform = hooks["experimental.chat.system.transform"]
 const toolBefore = hooks["tool.execute.before"]
-const duplicate = await plugin()
+const duplicate = await plugin.server()
 
 function textPart(sessionID: string, text = RENDERED_COMMAND) {
   return {

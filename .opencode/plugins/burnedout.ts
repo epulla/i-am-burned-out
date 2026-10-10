@@ -21,7 +21,7 @@ function reply(parts: { type: string; text?: string; synthetic?: boolean }[], li
   part.text = `${part.text ?? ""}\n\nConfirm with ${line}. If no user request remains, output that line only; otherwise continue any remaining user request, including tool calls.`
 }
 
-export default (async () => ({
+const server = (async () => ({
   "command.execute.before": async (input, output) => {
     if (input.command !== "burnedout") return
 
@@ -59,3 +59,5 @@ export default (async () => ({
     }
   },
 })) satisfies Plugin
+
+export default { id: "burnedout", server }

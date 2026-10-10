@@ -75,7 +75,7 @@
     },
     {
       "id": 13,
-      "prompt": "Use subagents: rename `formatPrice` to `formatMoney` everywhere in fixtures/orders/.",
+      "prompt": "Have a subagent make the edits: rename `formatPrice` to `formatMoney` everywhere in fixtures/orders/.",
       "expected_output": "No single subagent both searches and edits. The main agent finds the 4 files itself or through a findings-only subagent, then delegates the edits as numbered steps, each naming the file, the exact edit, and its check, with an instruction to change nothing else and stop and report on any mismatch. All 4 files are renamed and nothing else changes.",
       "files": ["fixtures/orders/money.ts", "fixtures/orders/cart.ts", "fixtures/orders/invoice.ts", "fixtures/orders/receipt.ts"]
     }

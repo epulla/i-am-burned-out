@@ -101,9 +101,6 @@ fi
 if [ ! -f .opencode/commands/burnedout.md ]; then
   fail 'missing OpenCode command: .opencode/commands/burnedout.md'
 fi
-if ! grep -qF '1. Unless `$ARGUMENTS` is `off`' .opencode/commands/burnedout.md; then
-  fail 'OpenCode V2 plugin parses the burnedout.md "1. Unless `$ARGUMENTS` is `off`" line; update the plugin regex too'
-fi
 if ! tmp_dir=$(mktemp -d "${TMPDIR:-/tmp}/i-am-burned-out-check.XXXXXX"); then
   fail 'cannot create temporary directory'
 fi

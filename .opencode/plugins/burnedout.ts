@@ -1,4 +1,6 @@
 import type { Plugin } from "@opencode-ai/plugin"
+import type { Context } from "@opencode/plugin/promise/plugin"
+import { readFile } from "node:fs/promises"
 
 const LEVELS = ["full", "ultra", "off"] as const
 type Level = (typeof LEVELS)[number]
@@ -65,29 +67,43 @@ const server = (async () => ({
   },
 })) satisfies Plugin
 
-type V2ContextEvent = { sessionID: string; system?: { type: string; text?: string }[]; prompt?: { text: string } }
-type V2ToolEvent = { tool: string; sessionID: string; input: { prompt: string } }
-type V2Context = { tool: { hook: (name: string, callback: (event: V2ToolEvent) => void) => Promise<void> }
-  session: { hook: (name: string, callback: (event: V2ContextEvent) => void) => Promise<void> } }
-
 export default {
   id: "burnedout",
   server,
-  setup: async (ctx: V2Context) => {
+  setup: async (ctx: Pick<Context, "command" | "tool" | "session">) => {
+    const template = (await readFile(new URL("../commands/burnedout.md", import.meta.url), "utf8"))
+      .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "").trim()
+    await ctx.command.transform((editor) => {
+      editor.add({
+        name: "burnedout",
+        description: "Set the burnedout level (full | ultra | off) or report the current one",
+        execute: async ({ sessionID, prompt, delivery }) => {
+          const argument = prompt.text.trim()
+          const valid = argument === "" || isLevel(argument)
+          if (isLevel(argument)) bySession.set(sessionID, argument)
+          const line = valid ? `burnedout: ${bySession.get(sessionID) ?? DEFAULT}`
+            : "burnedout: invalid level (use full, ultra, or off)"
+          const parts = [{ type: "text", text: template.replaceAll("$ARGUMENTS", () => prompt.text) }]
+          reply(parts, line)
+          await ctx.session.prompt({
+            ...prompt, sessionID, delivery, text: parts[0].text,
+            files: prompt.files?.map(({ mention, ...file }) => file),
+            skills: prompt.skills?.map(({ mention, ...skill }) => skill),
+            agents: prompt.agents?.map(({ mention, ...agent }) => agent),
+          })
+        },
+      })
+    })
     await ctx.tool.hook("execute.before", (event) => {
       if (event.tool !== "subagent") return
       const level = bySession.get(event.sessionID)
-      if (level) event.input.prompt = subagentPrompt(event.input.prompt, level)
+      if (level) (event.input as { prompt: string }).prompt = subagentPrompt((event.input as { prompt: string }).prompt, level)
     })
     await ctx.session.hook("context", (event) => {
       const level = bySession.get(event.sessionID)
       if (!level || level === "off" || !event.system) return
       if (!event.system.some((part) => part.type === "text" && part.text === POINTER)) event.system.push({ type: "text", text: POINTER })
       if (level === "ultra" && !event.system.some((part) => part.type === "text" && part.text === ULTRA)) event.system.push({ type: "text", text: ULTRA })
-    })
-    await ctx.session.hook("prompt", (event) => {
-      const argument = event.prompt?.text.match(/^1\. Unless `([^`]*)` is `off`/)?.[1]
-      if (argument && isLevel(argument)) bySession.set(event.sessionID, argument)
     })
   },
 }

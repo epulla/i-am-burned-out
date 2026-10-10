@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { readFileSync } from "node:fs"
 import plugin from "../.opencode/plugins/burnedout.ts"
 
 const RENDERED_COMMAND = "rendered command template"
@@ -26,23 +27,32 @@ function textPart(sessionID: string, text = RENDERED_COMMAND) {
 }
 
 function v2Context() {
+  let command
+  const prompts = []
   const toolHooks: Record<string, (event: { tool: string; sessionID: string; input: { agent: string; description: string; prompt: string } }) => void> = {}
   const sessionHooks: Record<string, (event: { sessionID: string; system?: { type: string; text?: string }[]; prompt?: { text: string } }) => void> = {}
   return {
     toolHooks,
     sessionHooks,
+    prompts,
+    execute: async (sessionID: string, text: string, attachments = {}, delivery = "steer") =>
+      command.execute({ sessionID, prompt: { text, ...attachments }, delivery }),
     ctx: {
+      command: { transform: async (callback) => { callback({ add: (definition) => { command = definition } }) } },
       tool: { hook: async (name: string, callback: (event: { tool: string; sessionID: string; input: { agent: string; description: string; prompt: string } }) => void) => { toolHooks[name] = callback } },
-      session: { hook: async (name: string, callback: (event: { sessionID: string; system?: { type: string; text?: string }[]; prompt?: { text: string } }) => void) => { sessionHooks[name] = callback } },
+      session: {
+        hook: async (name: string, callback: (event: { sessionID: string; system?: { type: string; text?: string }[]; prompt?: { text: string } }) => void) => { sessionHooks[name] = callback },
+        prompt: async (input) => { prompts.push(input) },
+      },
     },
   }
 }
 
 test("V2 prompt level reaches context once", async () => {
   const sessionID = "plugin-test-v2-context"
-  const { ctx, sessionHooks } = v2Context()
+  const { ctx, sessionHooks, execute } = v2Context()
   await plugin.setup(ctx)
-  sessionHooks.prompt!({ sessionID, prompt: { text: "1. Unless `ultra` is `off`, load the skill" } })
+  await execute(sessionID, "ultra")
 
   const system: { type: string; text: string }[] = []
   sessionHooks.context!({ sessionID, system })
@@ -55,9 +65,9 @@ test("V2 prompt level reaches context once", async () => {
 
 test("V2 execute.before forwards subagent prompt only", async () => {
   const sessionID = "plugin-test-v2-subagent"
-  const { ctx, toolHooks, sessionHooks } = v2Context()
+  const { ctx, toolHooks, execute } = v2Context()
   await plugin.setup(ctx)
-  sessionHooks.prompt!({ sessionID, prompt: { text: "1. Unless `ultra` is `off`, load the skill" } })
+  await execute(sessionID, "ultra")
 
   const input = { agent: "general", description: "inspect", prompt: "find the bug" }
   toolHooks["execute.before"]!({ tool: "subagent", sessionID, input })
@@ -69,14 +79,53 @@ test("V2 execute.before forwards subagent prompt only", async () => {
 })
 
 test("V2 empty and invalid levels leave fresh sessions unchanged", async () => {
-  const { ctx, sessionHooks } = v2Context()
+  const { ctx, sessionHooks, execute } = v2Context()
   await plugin.setup(ctx)
   for (const [sessionID, argument] of [["plugin-test-v2-empty", ""], ["plugin-test-v2-invalid", "foo"]]) {
-    sessionHooks.prompt!({ sessionID, prompt: { text: `1. Unless \`${argument}\` is \`off\`, load the skill` } })
+    await execute(sessionID, argument)
     const system: { type: string; text: string }[] = []
     sessionHooks.context!({ sessionID, system })
     assert.deepEqual(system, [])
   }
+})
+
+test("V2 command confirmations and state match V1 across queries, invalid input, and off", async () => {
+  const { ctx, sessionHooks, execute, prompts } = v2Context()
+  await plugin.setup(ctx)
+  const template = readFileSync(new URL("../.opencode/commands/burnedout.md", import.meta.url), "utf8")
+    .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "").trim()
+  for (const [argument, confirmation, expectedSystem] of [
+    ["", "full", []], ["ultra", "ultra", [POINTER, ULTRA]],
+    ["", "ultra", [POINTER, ULTRA]],
+    ["nonsense", "invalid level (use full, ultra, or off)", [POINTER, ULTRA]],
+    ["off", "off", []], ["", "off", []],
+  ] as const) {
+    const sessionID = "plugin-test-v2-parity"
+    const parts = [textPart("plugin-test-v1-parity", template.replaceAll("$ARGUMENTS", argument))]
+    await commandBefore({ command: "burnedout", arguments: argument, sessionID: "plugin-test-v1-parity" }, { parts })
+    await execute(sessionID, argument)
+    assert.equal(prompts.at(-1).text, parts[0].text)
+    assert.ok(prompts.at(-1).text.includes(`Confirm with burnedout: ${confirmation}.`))
+    const system = []
+    sessionHooks.context({ sessionID, system })
+    assert.deepEqual(system.map((part) => part.text), expectedSystem)
+  }
+  await execute("plugin-test-v2-isolated", "")
+  assert.ok(prompts.at(-1).text.includes("Confirm with burnedout: full."))
+})
+
+test("V2 command retains attachments and delivery without stale mention offsets", async () => {
+  const { ctx, execute, prompts } = v2Context()
+  await plugin.setup(ctx)
+  const mention = { start: 0, end: 4, text: "full" }
+  await execute("plugin-test-v2-attachments", "full", {
+    files: [{ uri: "file:///example.md", name: "example.md", mention }],
+    skills: [{ id: "review", mention }], agents: [{ id: "general", mention }],
+  }, "queue")
+  assert.deepEqual(prompts[0].files, [{ uri: "file:///example.md", name: "example.md" }])
+  assert.deepEqual(prompts[0].skills, [{ id: "review" }])
+  assert.deepEqual(prompts[0].agents, [{ id: "general" }])
+  assert.equal(prompts[0].delivery, "queue")
 })
 
 test("default query preserves rendered command template exactly", async () => {

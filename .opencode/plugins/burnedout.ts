@@ -21,7 +21,12 @@ function reply(parts: { type: string; text?: string; synthetic?: boolean }[], li
   part.text = `${part.text ?? ""}\n\nConfirm with ${line}. If no user request remains, output that line only; otherwise continue any remaining user request, including tool calls.`
 }
 
-export default (async () => ({
+function subagentPrompt(prompt: string, level: Level) {
+  if (level === "off" || prompt.includes(POINTER)) return prompt
+  return `${prompt}\n\n${POINTER}\n\n${SUBAGENT}${level === "ultra" ? `\n\n${ULTRA}` : ""}`
+}
+
+const server = (async () => ({
   "command.execute.before": async (input, output) => {
     if (input.command !== "burnedout") return
 
@@ -44,7 +49,7 @@ export default (async () => ({
     const prompt = output.args?.prompt
     if (typeof prompt !== "string" || prompt.includes(POINTER)) return
 
-    output.args.prompt = `${prompt}\n\n${POINTER}\n\n${SUBAGENT}${level === "ultra" ? `\n\n${ULTRA}` : ""}`
+    output.args.prompt = subagentPrompt(prompt, level)
   },
 
   // experimental.* is unstable; a throw here would break every request in the session.
@@ -59,3 +64,30 @@ export default (async () => ({
     }
   },
 })) satisfies Plugin
+
+type V2ContextEvent = { sessionID: string; system?: { type: string; text?: string }[]; prompt?: { text: string } }
+type V2ToolEvent = { tool: string; sessionID: string; input: { prompt: string } }
+type V2Context = { tool: { hook: (name: string, callback: (event: V2ToolEvent) => void) => Promise<void> }
+  session: { hook: (name: string, callback: (event: V2ContextEvent) => void) => Promise<void> } }
+
+export default {
+  id: "burnedout",
+  server,
+  setup: async (ctx: V2Context) => {
+    await ctx.tool.hook("execute.before", (event) => {
+      if (event.tool !== "subagent") return
+      const level = bySession.get(event.sessionID)
+      if (level) event.input.prompt = subagentPrompt(event.input.prompt, level)
+    })
+    await ctx.session.hook("context", (event) => {
+      const level = bySession.get(event.sessionID)
+      if (!level || level === "off" || !event.system) return
+      if (!event.system.some((part) => part.type === "text" && part.text === POINTER)) event.system.push({ type: "text", text: POINTER })
+      if (level === "ultra" && !event.system.some((part) => part.type === "text" && part.text === ULTRA)) event.system.push({ type: "text", text: ULTRA })
+    })
+    await ctx.session.hook("prompt", (event) => {
+      const argument = event.prompt?.text.match(/^1\. Unless `([^`]*)` is `off`/)?.[1]
+      if (argument && isLevel(argument)) bySession.set(event.sessionID, argument)
+    })
+  },
+}

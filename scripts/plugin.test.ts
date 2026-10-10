@@ -9,11 +9,11 @@ const ULTRA =
 const SUBAGENT =
   "burnedout: reply with findings only, file:line references, no narration, no restatement of the brief."
 
-const hooks = await plugin()
+const hooks = await plugin.server()
 const commandBefore = hooks["command.execute.before"]
 const systemTransform = hooks["experimental.chat.system.transform"]
 const toolBefore = hooks["tool.execute.before"]
-const duplicate = await plugin()
+const duplicate = await plugin.server()
 
 function textPart(sessionID: string, text = RENDERED_COMMAND) {
   return {
@@ -24,6 +24,60 @@ function textPart(sessionID: string, text = RENDERED_COMMAND) {
     text,
   }
 }
+
+function v2Context() {
+  const toolHooks: Record<string, (event: { tool: string; sessionID: string; input: { agent: string; description: string; prompt: string } }) => void> = {}
+  const sessionHooks: Record<string, (event: { sessionID: string; system?: { type: string; text?: string }[]; prompt?: { text: string } }) => void> = {}
+  return {
+    toolHooks,
+    sessionHooks,
+    ctx: {
+      tool: { hook: async (name: string, callback: (event: { tool: string; sessionID: string; input: { agent: string; description: string; prompt: string } }) => void) => { toolHooks[name] = callback } },
+      session: { hook: async (name: string, callback: (event: { sessionID: string; system?: { type: string; text?: string }[]; prompt?: { text: string } }) => void) => { sessionHooks[name] = callback } },
+    },
+  }
+}
+
+test("V2 prompt level reaches context once", async () => {
+  const sessionID = "plugin-test-v2-context"
+  const { ctx, sessionHooks } = v2Context()
+  await plugin.setup(ctx)
+  sessionHooks.prompt!({ sessionID, prompt: { text: "1. Unless `ultra` is `off`, load the skill" } })
+
+  const system: { type: string; text: string }[] = []
+  sessionHooks.context!({ sessionID, system })
+  sessionHooks.context!({ sessionID, system })
+  assert.deepEqual(system, [
+    { type: "text", text: POINTER },
+    { type: "text", text: ULTRA },
+  ])
+})
+
+test("V2 execute.before forwards subagent prompt only", async () => {
+  const sessionID = "plugin-test-v2-subagent"
+  const { ctx, toolHooks, sessionHooks } = v2Context()
+  await plugin.setup(ctx)
+  sessionHooks.prompt!({ sessionID, prompt: { text: "1. Unless `ultra` is `off`, load the skill" } })
+
+  const input = { agent: "general", description: "inspect", prompt: "find the bug" }
+  toolHooks["execute.before"]!({ tool: "subagent", sessionID, input })
+  assert.equal(input.prompt, `find the bug\n\n${POINTER}\n\n${SUBAGENT}\n\n${ULTRA}`)
+
+  const unchanged = { agent: "general", description: "inspect", prompt: "find the bug" }
+  toolHooks["execute.before"]!({ tool: "read", sessionID, input: unchanged })
+  assert.equal(unchanged.prompt, "find the bug")
+})
+
+test("V2 empty and invalid levels leave fresh sessions unchanged", async () => {
+  const { ctx, sessionHooks } = v2Context()
+  await plugin.setup(ctx)
+  for (const [sessionID, argument] of [["plugin-test-v2-empty", ""], ["plugin-test-v2-invalid", "foo"]]) {
+    sessionHooks.prompt!({ sessionID, prompt: { text: `1. Unless \`${argument}\` is \`off\`, load the skill` } })
+    const system: { type: string; text: string }[] = []
+    sessionHooks.context!({ sessionID, system })
+    assert.deepEqual(system, [])
+  }
+})
 
 test("default query preserves rendered command template exactly", async () => {
   const sessionID = "plugin-test-default-query"

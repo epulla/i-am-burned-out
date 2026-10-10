@@ -330,6 +330,8 @@ Restart OpenCode and run `/burnedout full`. The `npx skills add` command install
 
 The plugin is optional. Without it, `/burnedout` works but the level is only an instruction the model has to remember. With it, the level is per-session state: invalid values leave state unchanged and receive the exact invalid-level response, while the active level pointer is re-injected on every request, with `ultra` rules added when selected, and delegated subagent prompts inherit the active level plus a terse-output constraint (findings only, `file:line`, no narration). OpenCode is the only host where levels are enforced this way; everywhere else they stay best-effort. `off` stops the plugin from injecting anything, but it cannot remove skill text the model has already loaded into the conversation.
 
+`burnedout.ts` works with OpenCode V1 (1.18.29 or newer) and V2; V2 also discovers `~/.config/opencode/plugins/` and `.opencode/plugins/`, so these install paths and commands stay unchanged.
+
 ### Verify
 
 ```bash

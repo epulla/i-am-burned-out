@@ -28,7 +28,7 @@ A reported cause is a hypothesis until reproduced or shown in code, logs, or out
 - **Direct.** Fix and test without waiting for go. No plan file, no plan message.
 - **Bug, reproducible.** Write the repro first (failing test or command), show its output, confirm it matches the report, then fix. A bug seen only in a UI: the exact message located in source or logs counts as the repro; cite where. No match: show the output, delete the repro unless the user keeps it, ask how the bug was observed.
 - **Bug, not reproducible.** Explore callers, `git log -S <symbol>`, recent diffs, logs. Present one hypothesis, its evidence, and the confirming check; fix once the user agrees. If the hypothesis dies, present the next one; never fix blind.
-- **Feature or multi-task change.** Write `docs/plans/<slug>.md` with `## Request` (the user's words verbatim), `## Decisions` (interview answers and assumed items), `## Tasks` (`- [ ]` checklist, at most 5, each with one acceptance check; one commit per task). Show the task list and wait for go; a go sent before the list approves answers, not tasks.
+- **Feature or multi-task change.** Write `docs/plans/<slug>.md` with `## Request` (the user's words verbatim), `## Decisions` (interview answers and assumed items), `## Tasks` (`- [ ]` checklist, at most 5, each with one acceptance check; one commit per task). Show the task list and wait for go; a go sent before the list approves answers, not tasks. The interview includes `Keep docs/plans/<slug>.md after the last task? default: no`; if no, the last task's commit deletes it.
 
 ## Execution
 

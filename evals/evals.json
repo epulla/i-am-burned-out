@@ -66,6 +66,12 @@
       "prompt": "Review comment on my PR: \"add a subclass for each of the 7 new formats so they go through parse()\". Plan the change in fixtures/formats.py; the new format names are yaml, toml, ini, tsv, xml, html, and markdown. Existing CSV and unknown formats must keep their behavior.",
       "expected_output": "States the change as one sentence (the 7 formats go through parse()). Reads parse() dispatch and the registry before choosing. Does not change supported on Parser because unknown formats must remain unsupported. Plans a shared registered parser or a small registry change for the 7 formats, keeping CSV dispatch unchanged. Names the skipped 7-subclass shape in one line and plans one parametrized test for the new formats; keeps existing CSV and unknown-format tests. Makes no edits before the user says go.",
       "files": ["fixtures/formats.py", "fixtures/test_formats.py"]
+    },
+    {
+      "id": 12,
+      "prompt": "Use subagents: rename `fetchWithRetry` to `fetchWithBackoff` everywhere in fixtures/.",
+      "expected_output": "No single subagent both searches and edits. The main agent finds the call sites itself or through a findings-only subagent, then either edits directly or delegates numbered steps naming each file, the exact edit, and its check, with an instruction to stop and report on any mismatch. Both files are renamed and nothing else changes.",
+      "files": ["fixtures/retry-client.ts", "fixtures/retry-client.test.ts"]
     }
   ]
 }

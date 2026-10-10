@@ -334,6 +334,8 @@ The plugin is optional. Without it, `/burnedout` works but the level is only an 
 
 Level state is in memory. A server restart or plugin module reload can reset it; run `/burnedout full` or `/burnedout ultra` again afterward. Restart V1 after updates; V2 watches configuration files, though restarting its service also resets in-memory state.
 
+Install the plugin globally or per project, not both. With both copies (including opening this repository with the global install), V2 shows `Plugin failed: burnedout` (`Duplicate plugin ID`); the first copy loaded stays active, so the toast is harmless.
+
 ### Verify
 
 ```bash

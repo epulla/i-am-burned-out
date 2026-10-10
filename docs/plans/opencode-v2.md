@@ -32,7 +32,7 @@ Defaults, confirmed by `go`:
 ## Tasks
 
 - [x] Dual export in `.opencode/plugins/burnedout.ts`: wrap existing hooks as `server`, add `id`. Check: `node --test scripts/plugin.test.ts` passes unchanged.
-- [ ] V2 `setup`: `tool` `execute.before` for `subagent`, `session` `context` pushing `{type:"text"}` parts, `session` `prompt` parsing the level. Check: new V2 tests in `scripts/plugin.test.ts` pass.
+- [x] V2 `setup`: `tool` `execute.before` for `subagent`, `session` `context` pushing `{type:"text"}` parts, `session` `prompt` parsing the level. Check: new V2 tests in `scripts/plugin.test.ts` pass.
 - [x] Template guard in `scripts/check.sh` for ``1. Unless `$ARGUMENTS` is `off` ``. Check: `bash scripts/check.sh` passes; fails when the line is edited.
 - [x] `INSTALL.md` OpenCode section states V1 and V2 support. Check: `bash scripts/check.sh` passes.
-- [ ] Manual V2 run: `/burnedout ultra` then a subagent call in scratch opencode2. Check: no plugin-load toast; subagent prompt contains the burnedout pointer.
+- [x] Manual V2 run: `/burnedout ultra` then a subagent call in scratch opencode2. Check: no plugin-load toast; subagent prompt contains the burnedout pointer.

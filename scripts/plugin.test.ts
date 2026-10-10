@@ -89,6 +89,28 @@ test("V2 empty and invalid levels leave fresh sessions unchanged", async () => {
   }
 })
 
+test("V2 subagent input is safe when malformed, inactive, or off and forwards only once", async () => {
+  const { ctx, toolHooks, execute } = v2Context()
+  await plugin.setup(ctx)
+  const sessionID = "plugin-test-v2-malformed"
+  await execute(sessionID, "ultra")
+  for (const input of [undefined, null, {}, { prompt: 42 }]) {
+    const event = { tool: "subagent", sessionID, input }
+    assert.doesNotThrow(() => toolHooks["execute.before"](event))
+    assert.deepEqual(event.input, input)
+  }
+  const input = { prompt: "find the bug" }
+  toolHooks["execute.before"]({ tool: "subagent", sessionID, input })
+  toolHooks["execute.before"]({ tool: "subagent", sessionID, input })
+  assert.equal(input.prompt, `find the bug\n\n${POINTER}\n\n${SUBAGENT}\n\n${ULTRA}`)
+  await execute(sessionID, "off")
+  for (const id of [sessionID, "plugin-test-v2-inactive"]) {
+    const unchanged = { prompt: "find the bug" }
+    toolHooks["execute.before"]({ tool: "subagent", sessionID: id, input: unchanged })
+    assert.equal(unchanged.prompt, "find the bug")
+  }
+})
+
 test("V2 command confirmations and state match V1 across queries, invalid input, and off", async () => {
   const { ctx, sessionHooks, execute, prompts } = v2Context()
   await plugin.setup(ctx)

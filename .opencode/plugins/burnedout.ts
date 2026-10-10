@@ -97,7 +97,10 @@ export default {
     await ctx.tool.hook("execute.before", (event) => {
       if (event.tool !== "subagent") return
       const level = bySession.get(event.sessionID)
-      if (level) (event.input as { prompt: string }).prompt = subagentPrompt((event.input as { prompt: string }).prompt, level)
+      if (!level || level === "off") return
+      const input = event.input as { prompt?: unknown } | null | undefined
+      if (typeof input?.prompt !== "string") return
+      input.prompt = subagentPrompt(input.prompt, level)
     })
     await ctx.session.hook("context", (event) => {
       const level = bySession.get(event.sessionID)

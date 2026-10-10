@@ -328,9 +328,11 @@ curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/.openco
 
 Restart OpenCode and run `/burnedout full`. The `npx skills add` command installs all three skills; `/burnedout-review` loads `burnedout-review` and `/burnedout-plan` loads `burnedout-plan`.
 
-The plugin is optional. Without it, `/burnedout` works but the level is only an instruction the model has to remember. With it, the level is per-session state: invalid values leave state unchanged and receive the exact invalid-level response, while the active level pointer is re-injected on every request, with `ultra` rules added when selected, and delegated subagent prompts inherit the active level plus a terse-output constraint (findings only, `file:line`, no narration). OpenCode is the only host where levels are enforced this way; everywhere else they stay best-effort. `off` stops the plugin from injecting anything, but it cannot remove skill text the model has already loaded into the conversation.
+The plugin is optional. Without it, `/burnedout` works but the level is only an instruction the model has to remember. With it, the level is per-session state: queries and invalid values leave state unchanged, and the plugin adds the current-level or exact invalid-level response instruction to the command prompt. A fresh query reports `full` without enabling injection. The active level pointer is re-injected before agent-loop model requests, with `ultra` rules added when selected, and delegated subagent prompts inherit the active level plus a terse-output constraint (findings only, `file:line`, no narration). The plugin enforces state and prompt injection, not the model's final wording. `off` stops injection, but cannot remove skill text already loaded into the conversation.
 
-`burnedout.ts` works with OpenCode V1 (1.18.29 or newer) and V2; V2 also discovers `~/.config/opencode/plugins/` and `.opencode/plugins/`, so these install paths and commands stay unchanged.
+`burnedout.ts` supports OpenCode V1 1.18.29+ and V2 2.0.26+; runtime loading was verified on both minimum versions without model requests. V2 also discovers `~/.config/opencode/plugins/` and `.opencode/plugins/`, so these install paths stay unchanged. Keep `commands/burnedout.md` beside the `plugins/` directory: V2 reads that template during setup and registers the command without parsing its wording.
+
+Level state is in memory. A server restart or plugin module reload can reset it; run `/burnedout full` or `/burnedout ultra` again afterward. Restart V1 after updates; V2 watches configuration files, though restarting its service also resets in-memory state.
 
 ### Verify
 
@@ -339,7 +341,18 @@ npx skills ls -g
 ls ~/.config/opencode/commands/burnedout.md ~/.config/opencode/commands/burnedout-review.md ~/.config/opencode/commands/burnedout-plan.md ~/.config/opencode/plugins/burnedout.ts
 ```
 
-Type `/` in OpenCode and confirm all three commands appear. Run `/burnedout nonsense` and confirm the reply is `burnedout: invalid level (use full, ultra, or off)`.
+Type `/` in OpenCode and confirm all three commands appear. Run `/burnedout ultra`, `/burnedout`, `/burnedout nonsense`, `/burnedout`, and `/burnedout off`. Queries should report `ultra` until `off`; invalid input should return `burnedout: invalid level (use full, ultra, or off)` without changing state. In V2, `opencode plugin list` should include `burnedout`.
+
+For repository development, use Node.js with TypeScript stripping support (tested with Node.js 24) and pnpm:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm typecheck
+pnpm test
+bash scripts/check.sh
+```
+
+The pinned V1/V2 API packages are development-only; users installing the single plugin file do not need them.
 
 ### Update
 

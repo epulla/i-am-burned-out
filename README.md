@@ -64,6 +64,8 @@ Run `/burnedout ultra` when the codebase has wronged you, `/burnedout-review` fo
 npx skills add epulla/i-am-burned-out -a opencode -g -y
 ```
 
+The `/burnedout` plugin supports OpenCode V1 1.18.29+ and V2. Upgrading from 0.10.x? Re-download `burnedout.ts` as shown in [INSTALL.md](INSTALL.md).
+
 **Other Agent Skills hosts** (Cursor, Amp, Windsurf, Cline, Copilot)
 
 ```bash

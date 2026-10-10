@@ -35,4 +35,4 @@ A reported cause is a hypothesis until reproduced or shown in code, logs, or out
 - No source edits before `go`, except on the direct path; a repro test or command may come first. A plan, a repro, or a hypothesis is not approval.
 - Feature path: one task at a time. Run its acceptance check, tick it `- [x]`, commit both together. On resume, read the plan file and continue from the first unticked task.
 - A finding that changes scope becomes a new interview item, not code.
-- Close with what shipped, what was assumed, and one next step.
+- Close with what shipped, what was assumed, and a final `Next:` line: the most important remaining action (unverified behavior before install or release), as a command or a task the user can approve with one word.

@@ -5,8 +5,18 @@
   "license": "MIT",
   "homepage": "https://github.com/epulla/i-am-burned-out",
   "private": true,
+  "scripts": {
+    "typecheck": "tsc --pretty false",
+    "test": "node --test --test-reporter=dot scripts/plugin.test.ts"
+  },
   "keywords": ["pi-package"],
   "pi": {
     "skills": ["./skills"]
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "1.18.29",
+    "@opencode/plugin": "2.0.26",
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2"
   }
 }

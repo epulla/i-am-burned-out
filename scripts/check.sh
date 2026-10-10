@@ -139,3 +139,5 @@ if [ ! -f "$PLUGIN" ]; then
 fi
 node --test scripts/plugin.test.ts
 pass 'OpenCode plugin behavior'
+pnpm typecheck
+pass 'OpenCode V1/V2 API types'

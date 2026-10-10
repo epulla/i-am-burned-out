@@ -1,5 +1,5 @@
 import type { Plugin } from "@opencode-ai/plugin"
-import type { Context } from "@opencode/plugin/promise/plugin"
+import type { Context, Plugin as V2Plugin } from "@opencode/plugin/promise/plugin"
 import { readFile } from "node:fs/promises"
 
 const LEVELS = ["full", "ultra", "off"] as const
@@ -109,4 +109,4 @@ export default {
       if (level === "ultra" && !event.system.some((part) => part.type === "text" && part.text === ULTRA)) event.system.push({ type: "text", text: ULTRA })
     })
   },
-}
+} satisfies V2Plugin & { server: Plugin }

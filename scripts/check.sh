@@ -62,7 +62,7 @@ done
 pass 'version synchronization across eight expected files'
 
 ruby -ryaml <<'RUBY'
-expected = %w[burnedout-plan burnedout-review i-am-burned-out]
+expected = %w[burnedout-execute burnedout-plan burnedout-review i-am-burned-out]
 paths = Dir.glob("skills/*/SKILL.md").sort
 found = paths.map { |path| File.basename(File.dirname(path)) }
 abort "FAIL expected skills #{expected.join(', ')}, found #{found.join(', ')}" unless found == expected
@@ -84,7 +84,7 @@ paths.each do |path|
   end
 end
 RUBY
-pass 'SKILL.md YAML frontmatter for all three skills'
+pass 'SKILL.md YAML frontmatter for all four skills'
 
 normalize_command() {
   awk '
@@ -124,6 +124,12 @@ if ! cmp -s commands/burnedout-plan.md .opencode/commands/burnedout-plan.md; the
 fi
 if ! grep -q 'Load the `burnedout-plan` skill' commands/burnedout-plan.md; then
   fail 'plan command must load the burnedout-plan skill'
+fi
+if ! cmp -s commands/burnedout-execute.md .opencode/commands/burnedout-execute.md; then
+  fail 'Claude and OpenCode execute commands differ'
+fi
+if ! grep -q 'Load the `burnedout-execute` skill' commands/burnedout-execute.md; then
+  fail 'execute command must load the burnedout-execute skill'
 fi
 pass 'normalized command parity'
 

@@ -42,7 +42,7 @@ This route follows [AstronClaw's custom-skills documentation](https://github.com
 1. Download [`SKILL.md`](https://raw.githubusercontent.com/epulla/i-am-burned-out/main/skills/i-am-burned-out/SKILL.md).
 2. Open **My skills**, choose **New**, and upload the file.
 3. Confirm the imported skill is named `i-am-burned-out`, then enable it.
-4. Optional: repeat with [`burnedout-review/SKILL.md`](https://raw.githubusercontent.com/epulla/i-am-burned-out/main/skills/burnedout-review/SKILL.md) for the review skill and [`burnedout-plan/SKILL.md`](https://raw.githubusercontent.com/epulla/i-am-burned-out/main/skills/burnedout-plan/SKILL.md) for the plan skill.
+4. Optional: repeat with [`burnedout-review/SKILL.md`](https://raw.githubusercontent.com/epulla/i-am-burned-out/main/skills/burnedout-review/SKILL.md) for review, [`burnedout-plan/SKILL.md`](https://raw.githubusercontent.com/epulla/i-am-burned-out/main/skills/burnedout-plan/SKILL.md) for planning, and [`burnedout-execute/SKILL.md`](https://raw.githubusercontent.com/epulla/i-am-burned-out/main/skills/burnedout-execute/SKILL.md) for execution.
 
 ### Verify
 
@@ -68,7 +68,7 @@ claude plugin marketplace add epulla/i-am-burned-out
 claude plugin install i-am-burned-out@i-am-burned-out
 ```
 
-Inside Claude Code, run `/burnedout full`. Use `/burnedout` with no argument to report the current level; `/burnedout-review` reviews the current diff without changing it; `/burnedout-plan <request>` triages and asks before building. Plugin commands are also always available under their namespaced names, `/i-am-burned-out:burnedout`, `/i-am-burned-out:burnedout-review`, and `/i-am-burned-out:burnedout-plan`. Use those if another command already owns the short name.
+Inside Claude Code, run `/burnedout full`. Use `/burnedout` with no argument to report the current level; `/burnedout-review` reviews the current diff without changing it; `/burnedout-plan <request>` triages and asks before building; `/burnedout-execute` executes approved work. Plugin commands are also always available under their namespaced names, `/i-am-burned-out:burnedout`, `/i-am-burned-out:burnedout-review`, `/i-am-burned-out:burnedout-plan`, and `/i-am-burned-out:burnedout-execute`. Use those if another command already owns the short name.
 
 ### Verify
 
@@ -76,7 +76,7 @@ Inside Claude Code, run `/burnedout full`. Use `/burnedout` with no argument to 
 claude plugin list
 ```
 
-Type `/bu` in Claude Code and confirm `burnedout`, `burnedout-review`, and `burnedout-plan` appear in the command menu.
+Type `/bu` in Claude Code and confirm `burnedout`, `burnedout-review`, `burnedout-plan`, and `burnedout-execute` appear in the command menu.
 
 ### Update
 
@@ -104,7 +104,7 @@ codex plugin marketplace add epulla/i-am-burned-out --ref main
 codex plugin add i-am-burned-out@i-am-burned-out
 ```
 
-Inside Codex, invoke `$i-am-burned-out`. Add `at full`, `at ultra`, or `at off` to select a level. Other levels are rejected without changing the current level. Invoke `$burnedout-review` for a delete-list from the current branch, or `$burnedout-plan` to be asked about assumptions first.
+Inside Codex, invoke `$i-am-burned-out`. Add `at full`, `at ultra`, or `at off` to select a level. Other levels are rejected without changing the current level. Invoke `$burnedout-review` for a delete-list from the current branch, `$burnedout-plan` to be asked about assumptions first, or `$burnedout-execute` to execute approved work.
 
 ### Verify
 
@@ -173,9 +173,10 @@ Choose the custom command for on-demand use or the extension for always-on use. 
 mkdir -p ~/.gemini/commands
 curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/skills/i-am-burned-out/agents/gemini.toml -o ~/.gemini/commands/burnedout.toml
 curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/skills/burnedout-plan/agents/gemini.toml -o ~/.gemini/commands/burnedout-plan.toml
+curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/skills/burnedout-execute/agents/gemini.toml -o ~/.gemini/commands/burnedout-execute.toml
 ```
 
-Start a new session and run `/burnedout full`. The second command is optional and adds `/burnedout-plan <request>`.
+Start a new session and run `/burnedout full`. The second and third commands are optional and add `/burnedout-plan <request>` and `/burnedout-execute`.
 
 ### Install extension (always on)
 
@@ -187,7 +188,7 @@ gemini extensions install https://github.com/epulla/i-am-burned-out
 
 ```bash
 gemini extensions list
-ls ~/.gemini/commands/burnedout.toml ~/.gemini/commands/burnedout-plan.toml
+ls ~/.gemini/commands/burnedout.toml ~/.gemini/commands/burnedout-plan.toml ~/.gemini/commands/burnedout-execute.toml
 ```
 
 Run only the verification command for your route. For the command route, you can also type `/` in Gemini and confirm `burnedout` appears.
@@ -204,7 +205,7 @@ For the command route, rerun its `curl` commands.
 
 ```bash
 gemini extensions uninstall i-am-burned-out
-rm ~/.gemini/commands/burnedout.toml ~/.gemini/commands/burnedout-plan.toml
+rm ~/.gemini/commands/burnedout.toml ~/.gemini/commands/burnedout-plan.toml ~/.gemini/commands/burnedout-execute.toml
 ```
 
 Run only the uninstall command for the route you installed.
@@ -261,9 +262,10 @@ Run the command matching the scope you installed.
 hermes skills install epulla/i-am-burned-out/skills/i-am-burned-out
 hermes skills install epulla/i-am-burned-out/skills/burnedout-review
 hermes skills install epulla/i-am-burned-out/skills/burnedout-plan
+hermes skills install epulla/i-am-burned-out/skills/burnedout-execute
 ```
 
-The second and third commands are optional and add the review and plan skills. Start a new Hermes session and run `/i-am-burned-out`, `/burnedout-review`, or `/burnedout-plan`.
+The second, third, and fourth commands are optional and add the review, plan, and execute skills. Start a new Hermes session and run `/i-am-burned-out`, `/burnedout-review`, `/burnedout-plan`, or `/burnedout-execute`.
 
 ### Verify
 
@@ -277,6 +279,7 @@ hermes skills list
 hermes skills update i-am-burned-out
 hermes skills update burnedout-review
 hermes skills update burnedout-plan
+hermes skills update burnedout-execute
 ```
 
 ### Uninstall
@@ -285,6 +288,7 @@ hermes skills update burnedout-plan
 hermes skills uninstall i-am-burned-out
 hermes skills uninstall burnedout-review
 hermes skills uninstall burnedout-plan
+hermes skills uninstall burnedout-execute
 ```
 
 </details>
@@ -322,11 +326,12 @@ mkdir -p ~/.config/opencode/commands
 curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/.opencode/commands/burnedout.md -o ~/.config/opencode/commands/burnedout.md
 curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/.opencode/commands/burnedout-review.md -o ~/.config/opencode/commands/burnedout-review.md
 curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/.opencode/commands/burnedout-plan.md -o ~/.config/opencode/commands/burnedout-plan.md
+curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/.opencode/commands/burnedout-execute.md -o ~/.config/opencode/commands/burnedout-execute.md
 mkdir -p ~/.config/opencode/plugins
 curl -fsSL https://raw.githubusercontent.com/epulla/i-am-burned-out/main/.opencode/plugins/burnedout.ts -o ~/.config/opencode/plugins/burnedout.ts
 ```
 
-Restart OpenCode and run `/burnedout full`. The `npx skills add` command installs all three skills; `/burnedout-review` loads `burnedout-review` and `/burnedout-plan` loads `burnedout-plan`.
+Restart OpenCode and run `/burnedout full`. The `npx skills add` command installs all four skills; `/burnedout-review` loads `burnedout-review`, `/burnedout-plan` loads `burnedout-plan`, and `/burnedout-execute` loads `burnedout-execute`.
 
 The plugin is optional. Without it, `/burnedout` works but the level is only an instruction the model has to remember. With it, the level is per-session state: queries and invalid values leave state unchanged, and the plugin adds the current-level or exact invalid-level response instruction to the command prompt. A fresh query reports `full` without enabling injection. The active level pointer is re-injected before agent-loop model requests, with `ultra` rules added when selected, and delegated subagent prompts inherit the active level plus a terse-output constraint (findings only, `file:line`, no narration). The plugin enforces state and prompt injection, not the model's final wording. `off` stops injection, but cannot remove skill text already loaded into the conversation.
 
@@ -340,10 +345,10 @@ Install the plugin globally or per project, not both. With both copies (includin
 
 ```bash
 npx skills ls -g
-ls ~/.config/opencode/commands/burnedout.md ~/.config/opencode/commands/burnedout-review.md ~/.config/opencode/commands/burnedout-plan.md ~/.config/opencode/plugins/burnedout.ts
+ls ~/.config/opencode/commands/burnedout.md ~/.config/opencode/commands/burnedout-review.md ~/.config/opencode/commands/burnedout-plan.md ~/.config/opencode/commands/burnedout-execute.md ~/.config/opencode/plugins/burnedout.ts
 ```
 
-Type `/` in OpenCode and confirm all three commands appear. Run `/burnedout ultra`, `/burnedout`, `/burnedout nonsense`, `/burnedout`, and `/burnedout off`. Queries should report `ultra` until `off`; invalid input should return `burnedout: invalid level (use full, ultra, or off)` without changing state. In V2, `opencode plugin list` should include `burnedout`.
+Type `/` in OpenCode and confirm all four commands appear. Run `/burnedout ultra`, `/burnedout`, `/burnedout nonsense`, `/burnedout`, and `/burnedout off`. Queries should report `ultra` until `off`; invalid input should return `burnedout: invalid level (use full, ultra, or off)` without changing state. In V2, `opencode plugin list` should include `burnedout`.
 
 For repository development, use Node.js with TypeScript stripping support (tested with Node.js 24) and pnpm:
 
@@ -363,7 +368,7 @@ The pinned V1/V2 API packages are development-only; users installing the single 
 npx skills update -g
 ```
 
-Rerun all four `curl` commands to update the slash commands and the plugin.
+Rerun all five `curl` commands to update the slash commands and the plugin.
 
 `update` only refreshes skills you already have. To get a skill added in a new release (such as `burnedout-plan` in 0.10.0), rerun `npx skills add epulla/i-am-burned-out -a opencode -g -y`. Rerunning the `curl` commands also adds new slash commands.
 
@@ -371,7 +376,7 @@ Rerun all four `curl` commands to update the slash commands and the plugin.
 
 ```bash
 npx skills remove i-am-burned-out -g
-rm ~/.config/opencode/commands/burnedout.md ~/.config/opencode/commands/burnedout-review.md ~/.config/opencode/commands/burnedout-plan.md
+rm ~/.config/opencode/commands/burnedout.md ~/.config/opencode/commands/burnedout-review.md ~/.config/opencode/commands/burnedout-plan.md ~/.config/opencode/commands/burnedout-execute.md
 rm ~/.config/opencode/plugins/burnedout.ts
 ```
 
@@ -489,12 +494,12 @@ For a filesystem install:
 ```bash
 git clone https://github.com/epulla/i-am-burned-out
 mkdir -p ~/.agents/skills
-cp -R i-am-burned-out/skills/i-am-burned-out i-am-burned-out/skills/burnedout-review i-am-burned-out/skills/burnedout-plan ~/.agents/skills/
+cp -R i-am-burned-out/skills/i-am-burned-out i-am-burned-out/skills/burnedout-review i-am-burned-out/skills/burnedout-plan i-am-burned-out/skills/burnedout-execute ~/.agents/skills/
 ```
 
 ### Verify
 
-Open Skills manager and confirm `i-am-burned-out` appears, plus `burnedout-review` and `burnedout-plan` for a filesystem install.
+Open Skills manager and confirm `i-am-burned-out` appears, plus `burnedout-review`, `burnedout-plan`, and `burnedout-execute` for a filesystem install.
 
 ### Update
 
@@ -502,7 +507,7 @@ Re-import the URL, or run `git pull` and copy the skill folder again.
 
 ### Uninstall
 
-Remove the skill in Skills manager or delete `~/.agents/skills/i-am-burned-out`, `~/.agents/skills/burnedout-review`, and `~/.agents/skills/burnedout-plan`.
+Remove the skill in Skills manager or delete `~/.agents/skills/i-am-burned-out`, `~/.agents/skills/burnedout-review`, `~/.agents/skills/burnedout-plan`, and `~/.agents/skills/burnedout-execute`.
 
 </details>
 
@@ -558,7 +563,7 @@ The shipped skill allows automatic invocation. For deterministic activation, use
 
 ## Troubleshooting
 
-**Skill or command missing.** Restart the agent, then use the host's verify command. Confirm each `skills/<name>/SKILL.md` kept its filename, and that its folder name matches its `name:` frontmatter (`i-am-burned-out`, `burnedout-review`, `burnedout-plan`).
+**Skill or command missing.** Restart the agent, then use the host's verify command. Confirm each `skills/<name>/SKILL.md` kept its filename, and that its folder name matches its `name:` frontmatter (`i-am-burned-out`, `burnedout-review`, `burnedout-plan`, `burnedout-execute`).
 
 **Claude marketplace add fails.** Use `epulla/i-am-burned-out`, not a local subdirectory. Local installs must point at repository root.
 

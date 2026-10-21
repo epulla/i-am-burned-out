@@ -1,0 +1,7 @@
+interface:
+  display_name: "Burned Out Execute"
+  short_description: "Execute approved work with verified results"
+  default_prompt: "Use $burnedout-execute to execute the approved plan."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,17 @@
+{
+  "skill_name": "burnedout-execute",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Go: in SettingsForm.tsx, trim settings.email before validating it.",
+      "expected_output": "Treats the change as small (one file, no new module), edits directly with no subagents, runs the touched test, reports the change, +A/-D, and verification.",
+      "files": ["fixtures/settings-form/SettingsForm.tsx"]
+    },
+    {
+      "id": 2,
+      "prompt": "Go: add a persistent light/dark theme toggle to the settings form across the UI and persistence modules, with tests.",
+      "expected_output": "Treats the work as medium/large: explores existing code and reports paths, symbols, and test commands; creates TODOs with dependencies and one owner per file; delegates non-UI implementation in briefs that include one-sentence outcome, acceptance criteria with exact test command, owned files, out of scope, and line budget; main agent handles UI. Runs one verification subagent for tests/build and reports changes, +A/-D, verification, and blockers.",
+      "files": ["fixtures/settings-form/SettingsForm.tsx"]
+    }
+  ]
+}

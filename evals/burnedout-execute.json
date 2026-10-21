@@ -4,14 +4,14 @@
     {
       "id": 1,
       "prompt": "Go: in SettingsForm.tsx, trim settings.email before validating it.",
-      "expected_output": "Treats the change as small (one file, no new module), edits directly with no subagents, runs the touched test, reports the change, +A/-D, and verification.",
-      "files": ["fixtures/settings-form/SettingsForm.tsx"]
+      "expected_output": "Treats the change as small, directly edits the validation used by SettingsForm with no subagents, runs the touched test (`node --test settings.test.ts` from fixtures/settings-form), and reports the change, +A/-D, and verification.",
+      "files": ["fixtures/settings-theme/SettingsForm.tsx", "fixtures/settings-theme/settings.ts", "fixtures/settings-theme/settingsStore.ts", "fixtures/settings-theme/settings.test.ts"]
     },
     {
       "id": 2,
       "prompt": "Go: add a persistent light/dark theme toggle to the settings form across the UI and persistence modules, with tests.",
-      "expected_output": "Treats the work as medium/large: explores existing code and reports paths, symbols, and test commands; creates TODOs with dependencies and one owner per file; delegates non-UI implementation in briefs that include one-sentence outcome, acceptance criteria with exact test command, owned files, out of scope, and line budget; main agent handles UI. Runs one verification subagent for tests/build and reports changes, +A/-D, verification, and blockers.",
-      "files": ["fixtures/settings-form/SettingsForm.tsx"]
+      "expected_output": "States `Size: medium` or `large` before the first edit; explores existing code (paths, symbols, test commands) unless it has already read every touched file; creates TODOs with dependencies and one owner per file; delegates non-UI implementation in briefs that include one-sentence outcome, acceptance criteria with exact test command, owned files, out of scope, and line budget; main agent handles UI. Runs one verification subagent, which loads burnedout-review because diff spans several files, for tests/build and reports changes, +A/-D, verification, and blockers.",
+      "files": ["fixtures/settings-theme/SettingsForm.tsx", "fixtures/settings-theme/settings.ts", "fixtures/settings-theme/settingsStore.ts", "fixtures/settings-theme/settings.test.ts"]
     }
   ]
 }
